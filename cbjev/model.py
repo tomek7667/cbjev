@@ -213,23 +213,37 @@ class DecisionNet(nn.Module):
         self.scorer = nn.Sequential(nn.LayerNorm(d), nn.Linear(d, d), nn.GELU(), nn.Linear(d, 1))
         self.dropout = dropout
 
-    @staticmethod
-    def allow_mask(seg: torch.Tensor, valid: torch.Tensor, packed: bool) -> torch.Tensor:
+    shared = False       # packed rows: may state tokens read the questions? (see layout.packed_row)
+
+    def allow_mask(self, seg: torch.Tensor, valid: torch.Tensor, packed: bool) -> torch.Tensor:
         keys = valid[:, None, :]
         if not packed:
             return keys.expand(-1, seg.size(1), -1)
-        # questions read the state and themselves; the state reads only the state
+        # questions read the state and themselves, never each other
         same = seg[:, :, None] == seg[:, None, :]
         state_key = (seg == 0)[:, None, :]
-        return keys & (same | state_key)
+        allow = same | state_key
+        if self.shared:
+            allow = allow | (seg == 0)[:, :, None]         # the state reads everything
+        return keys & allow
+
+    def type_embedding(self, qtype: torch.Tensor, seg: torch.Tensor, packed: bool) -> torch.Tensor:
+        w = self.type_emb.weight.float()
+        if not packed:
+            return w[qtype]
+        if not self.shared:
+            return w[qtype.clamp(0, 2)] * (seg > 0)[..., None].float()
+        # state tokens carry per-type question counts (layout.state_type_code): use their mean
+        c = (qtype - 3).clamp(min=0)
+        n = torch.stack([c % 64, (c // 64) % 64, c // 4096], -1).float()
+        mix = n / n.sum(-1, keepdim=True).clamp(min=1)
+        one = F.one_hot(qtype.clamp(0, 2), 3).float()
+        return torch.where((qtype >= 3)[..., None], mix, one) @ w
 
     def forward(self, ids, pos, seg, qtype, valid, markers, packed: bool = True):
         allow = self.allow_mask(seg, valid, packed)
         h = self.encoder(ids, pos, allow)
-        te = self.type_emb(qtype).float()
-        if packed:
-            te = te * (seg > 0)[..., None].to(te.dtype)
-        h = h + te
+        h = h + self.type_embedding(qtype, seg, packed)
         if self.head is not None:
             cd = _compute_dtype(self.head.layers[0].linear1.weight)
             bias = torch.where(allow, torch.zeros((), dtype=cd, device=h.device), -1e4)[:, None]

@@ -127,6 +127,9 @@ class Agent:
         self.name = name or cfg.get("model_name") or os.path.basename(path.rstrip("/"))
         self.path = path
         self.layout = cfg.get("layout", "classic")
+        self.shared = self.layout == "shared"
+        if self.shared:
+            self.layout = "packed"          # same rows and batching, different mask and positions
         self.max_len = int(cfg.get("max_len", 512))
         self.head_max_len = int(cfg.get("head_max_len", 192))
         self.max_state = int(cfg.get("max_state_tokens", 1024))
@@ -147,6 +150,7 @@ class Agent:
             self.dtype = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
         net = DecisionNet(spec, head_layers=int(cfg.get("head_layers", 2)))
         load_weights(net, load_file(os.path.join(path, "model.safetensors")))
+        net.shared = self.shared
         net.eval()
         if self.dtype != torch.float32:
             net.cast_linear(self.dtype)
@@ -173,7 +177,7 @@ class Agent:
         for st, ids in zip(states, enc):
             left = isinstance(st, list)          # conversations: keep the newest turns
             if self.layout == "packed":
-                r = packed_row(self.tokens, ids, qs, self.max_state, self.max_question, left)
+                r = packed_row(self.tokens, ids, qs, self.max_state, self.max_question, left, self.shared)
                 base = len(rows)
                 rows.append(r)
                 where.append([(base, m) for m in r.markers])

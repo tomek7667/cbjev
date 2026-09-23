@@ -56,8 +56,8 @@ def permute_choice(spec, dists, rng):
 class Rows:
     """Cases -> packed rows with per-question targets, rebuilt each epoch (fresh option order)."""
 
-    def __init__(self, cases, tokens, max_state, max_question, teacher_mix, seed):
-        self.cases, self.tk = cases, tokens
+    def __init__(self, cases, tokens, max_state, max_question, teacher_mix, seed, shared=False):
+        self.cases, self.tk, self.shared = cases, tokens, shared
         self.max_state, self.max_question, self.mix = max_state, max_question, teacher_mix
         self.seed = seed
         texts = [as_text(c["state"]) for c in cases]
@@ -84,7 +84,8 @@ class Rows:
                 qs.append(q)
                 tg.append(t)
                 wt.append(w)
-            r = packed_row(self.tk, sid, qs, self.max_state, self.max_question, isinstance(c["state"], list))
+            r = packed_row(self.tk, sid, qs, self.max_state, self.max_question, isinstance(c["state"], list),
+                           self.shared)
             keep = [i for i, mk in enumerate(r.markers) if len(mk) == len(tg[i])]
             if not keep:
                 continue
@@ -207,6 +208,7 @@ def main():
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--eval-every", type=int, default=500)
     ap.add_argument("--name", default="cbjev")
+    ap.add_argument("--layout", default="shared", choices=["shared", "packed"])
     ap.add_argument("--vram-frac", type=float, default=0.5, help="cap on this process's share of GPU memory")
     ap.add_argument("--repeat", default="typed_decisions=8",
                     help="oversample sources, e.g. 'typed_decisions=8,go_emotions=2'")
@@ -233,8 +235,10 @@ def main():
     rep = {k: int(v) for k, v in (x.split("=") for x in a.repeat.split(",") if x)}
     train_cases = [c for c in train_cases for _ in range(rep.get(c["src"], 1))]
     dev_cases = read_jsonl(os.path.join(a.data, "dev.jsonl"))
-    tr = Rows(train_cases, tokens, a.max_state, a.max_question, a.teacher_mix, a.seed)
-    dv = Rows(dev_cases, tokens, a.max_state, a.max_question, 0.0, a.seed + 99)
+    shared = a.layout == "shared"
+    net.shared = shared
+    tr = Rows(train_cases, tokens, a.max_state, a.max_question, a.teacher_mix, a.seed, shared)
+    dv = Rows(dev_cases, tokens, a.max_state, a.max_question, 0.0, a.seed + 99, shared)
     dev_rows = dv.build(0)
     dev_td = [r for r in dev_rows if r[3] == "typed_decisions"]
     print("train cases %d, dev rows %d (typed-decisions %d)" % (len(train_cases), len(dev_rows), len(dev_td)),
@@ -263,7 +267,7 @@ def main():
     for k in ("temperature", "temperature_by_options", "training", "fine_tuned", "gradient_checkpointing",
               "max_tokens_per_batch", "act_costs", "cost_wrong_act", "max_prefixes"):
         cfg.pop(k, None)
-    cfg.update({"layout": "packed", "model_name": a.name, "max_state_tokens": a.max_state,
+    cfg.update({"layout": a.layout, "model_name": a.name, "max_state_tokens": a.max_state,
                 "max_question_tokens": a.max_question, "temperature": [1.0, 1.0, 1.0],
                 "trained_from": a.init + ("/" + a.init_sub if a.init_sub else "")})
 

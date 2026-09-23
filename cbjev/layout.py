@@ -197,29 +197,71 @@ class PackedRow:
     markers: List[List[int]]       # per question, row-local marker indices
 
 
+def state_type_code(qs: Sequence[Question]) -> int:
+    """How many questions of each type a row holds, packed into one int for the state tokens.
+
+    In the shared layout the state is read together with every question, so it gets the average
+    of their type embeddings (exactly the question's own when there is one, as in Laya).
+    """
+    n = [0, 0, 0]
+    for q in qs:
+        n[q.qtype] += 1
+    return 3 + min(n[0], 63) + 64 * min(n[1], 63) + 4096 * min(n[2], 63)
+
+
+def _segment(tk: Tokens, q: Question, max_question: int):
+    head, opts = tk.question(q)
+    opts = _fit_options(opts, max_question - 2)
+    room = max_question - 2 - sum(len(o) + 1 for o in opts)
+    part = head[: max(8, room)] + [tk.sep]
+    mk = []
+    for o in opts:
+        mk.append(len(part))
+        part += [tk.mask] + o
+    part.append(tk.sep)
+    return part, mk
+
+
 def packed_row(tk: Tokens, state_ids: List[int], qs: Sequence[Question], max_state: int,
-               max_question: int, truncate_left: bool) -> PackedRow:
-    """The state once, then one segment per question (see module docstring)."""
+               max_question: int, truncate_left: bool, shared: bool = False) -> PackedRow:
+    """The state once plus one segment per question (see module docstring).
+
+    shared=False  ``[CLS] state [SEP]`` first, segments after it at positions that continue from
+                  the state; the state is encoded without looking at any question.
+    shared=True   ``[CLS]`` + segments, each at positions 1..len (they overlap: every question
+                  believes it sits right after [CLS]), then ``state [SEP]`` after the longest
+                  segment. The state reads all questions. With one question the row is token
+                  for token, position for position, what a Laya checkpoint was trained on.
+    """
     st = state_ids[max(0, len(state_ids) - max_state):] if truncate_left else state_ids[:max_state]
+    parts = [_segment(tk, q, max_question) for q in qs]
+    markers: List[List[int]] = []
+    if shared:
+        ids, pos, seg = [tk.cls], [0], [0]
+        code = state_type_code(qs)
+        qtype = [code]
+        for si, (q, (part, mk)) in enumerate(zip(qs, parts), 1):
+            markers.append([len(ids) + m for m in mk])
+            ids += part
+            pos += range(1, 1 + len(part))
+            seg += [si] * len(part)
+            qtype += [q.qtype] * len(part)
+        start = 1 + max(len(p) for p, _ in parts)
+        tail = st + [tk.sep]
+        ids += tail
+        pos += range(start, start + len(tail))
+        seg += [0] * len(tail)
+        qtype += [code] * len(tail)
+        return PackedRow(ids, pos, seg, qtype, markers)
     ids = [tk.cls] + st + [tk.sep]
     n0 = len(ids)
     pos = list(range(n0))
     seg = [0] * n0
     qtype = [0] * n0
-    markers: List[List[int]] = []
-    for si, q in enumerate(qs, 1):
-        head, opts = tk.question(q)
-        opts = _fit_options(opts, max_question - 2)
-        room = max_question - 2 - sum(len(o) + 1 for o in opts)
-        part = head[: max(8, room)] + [tk.sep]
-        mk = []
-        for o in opts:
-            mk.append(len(ids) + len(part))
-            part += [tk.mask] + o
-        part.append(tk.sep)
+    for si, (q, (part, mk)) in enumerate(zip(qs, parts), 1):
+        markers.append([len(ids) + m for m in mk])
         ids += part
         pos += range(n0, n0 + len(part))
         seg += [si] * len(part)
         qtype += [q.qtype] * len(part)
-        markers.append(mk)
     return PackedRow(ids, pos, seg, qtype, markers)
