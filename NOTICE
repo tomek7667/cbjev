@@ -1,0 +1,19 @@
+cbjev
+Copyright (C) 2026 tomek7667
+
+This program is free software: you can redistribute it and/or modify it under the terms of
+the GNU General Public License as published by the Free Software Foundation, either version 3
+of the License, or (at your option) any later version. See LICENSE.
+
+Third-party material
+--------------------
+
+cbjev's checkpoints are fine-tuned from the Laya checkpoints by Convai Innovations
+(https://huggingface.co/convaiinnovations/laya, https://github.com/NandhaKishorM/laya),
+released under the Apache License, Version 2.0. The Laya checkpoints' question text format,
+the "choice / score / noul" question types and the public benchmark selections in
+benchmarks/suites.py follow Laya's. Apache-2.0 material may be combined into a GPL-3.0 work;
+the Apache-2.0 terms (including this attribution) continue to apply to that material.
+
+Training data comes from the public datasets listed in training/sources.py, each under its
+own license.

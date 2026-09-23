@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cbjev"
+version = "0.1.0"
+description = "Typed decisions (choice / score / noul) from one encoder pass: every question of a call shares one encoding of the state"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "GPL-3.0-or-later" }
+authors = [{ name = "tomek7667" }]
+keywords = ["decision-model", "classification", "calibration", "system-one", "routing", "guardrails", "jev", "laya"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "torch>=2.4",
+    "transformers>=4.48",
+    "tokenizers>=0.19",
+    "safetensors>=0.4",
+    "huggingface_hub>=0.20",
+    "numpy>=1.22",
+]
+
+[project.optional-dependencies]
+serve = ["fastapi>=0.110", "uvicorn>=0.27"]
+train = ["datasets>=3.0"]
+bench = ["datasets>=3.0", "matplotlib>=3.8", "laya>=0.3.11"]
+dev = ["pytest>=8", "httpx>=0.27", "fastapi>=0.110"]
+
+[project.scripts]
+cbjev = "cbjev.cli:main"
+cbjev-serve = "cbjev.serve:main"
+
+[tool.setuptools]
+packages = ["cbjev"]
