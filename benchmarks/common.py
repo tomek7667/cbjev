@@ -27,7 +27,14 @@ def _laya(sub=None, fast=False):
 
 
 def load_agent(name):
+    """Engine names: laya, laya-fast, laya-td, laya-ml, cbjev, cbjev-classic, cbjev:<path>;
+    a cbjev name may end in @v2 to answer with option-order voting."""
     import cbjev
+    if "@v" in name:
+        base, votes = name.rsplit("@v", 1)
+        ag = load_agent(base)
+        ag.order_votes = int(votes)
+        return ag
     if name == "laya":
         return _laya()
     if name == "laya-fast":

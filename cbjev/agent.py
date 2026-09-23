@@ -18,6 +18,7 @@ import os
 import threading
 import time
 import warnings
+from dataclasses import replace
 from typing import Any, Dict, List, Optional, Sequence, Union
 
 import numpy as np
@@ -28,6 +29,11 @@ from .hooks import Hooks, CallContext
 State = Union[str, dict, list]
 
 TEMP_RANGE = (0.5, 5.0)
+
+
+def _lse(z: np.ndarray) -> float:
+    m = z.max()
+    return float(m + np.log(np.exp(z - m).sum()))
 
 
 def _bucket_name(kind: str, k: int) -> str:
@@ -100,7 +106,8 @@ class Agent:
     """
 
     def __init__(self, checkpoint: str = "cbjev", device: Optional[str] = None, subfolder: Optional[str] = None,
-                 token: Optional[str] = None, graphs: bool = True, hooks=None, name: Optional[str] = None):
+                 token: Optional[str] = None, graphs: bool = True, hooks=None, name: Optional[str] = None,
+                 order_votes: Optional[int] = None):
         import torch
         from safetensors.torch import load_file
         from .engine import Engine
@@ -126,6 +133,10 @@ class Agent:
         self.max_question = int(cfg.get("max_question_tokens", 768))
         self.tokens = _tokens_for(os.path.join(path, "tokenizer"))
         self.hooks = Hooks.coerce(hooks)
+        # packed layout only: also ask every choice/score question with its options reversed and
+        # average the two answers. Costs one more short segment per question, not another pass.
+        votes = cfg.get("order_votes", 1) if order_votes is None else order_votes
+        self.order_votes = int(votes) if self.layout == "packed" else 1
 
         self.temperature = [self._clamp(t) for t in cfg.get("temperature", [1.0, 1.0, 1.0])]
         self.temperature_by_options = {k: self._clamp(v) for k, v in cfg.get("temperature_by_options", {}).items()}
@@ -223,7 +234,13 @@ class Agent:
                 "legend": {str(i): o.split(": ", 1)[1] for i, o in enumerate(q.options)},
                 "probabilities": probs, "confidence": round(conf, 4)}
 
-    def _score(self, states: Sequence[State], qs: List[Question], batch_rows: int = 32):
+    def _score(self, states: Sequence[State], asked: List[Question], batch_rows: int = 32):
+        qs, twin = list(asked), {}
+        if self.order_votes > 1:
+            for i, q in enumerate(asked):
+                if q.kind != "noul" and len(q.options) > 1:
+                    twin[i] = len(qs)
+                    qs.append(replace(q, qid=q.qid + "\x00rev", keys=q.keys[::-1], options=q.options[::-1]))
         rows, where = self._rows(states, qs)
         logits = [None] * len(rows)
         tokens = [0] * len(rows)
@@ -241,6 +258,7 @@ class Agent:
         offsets = np.cumsum([0] + [len(q.options) for q in qs])
         for spots in where:
             answers, used = {}, set()
+            raw = []
             for qi, (q, spot) in enumerate(zip(qs, spots)):
                 if packed:
                     ri, _ = spot
@@ -249,8 +267,15 @@ class Agent:
                 else:
                     ri, mk = spot
                     z = logits[ri][:len(mk)]
-                answers[q.qid] = self._answer(q, np.asarray(z, dtype=np.float64))
+                raw.append(np.asarray(z, dtype=np.float64))
                 used.add(ri)
+            for qi, q in enumerate(asked):
+                z = raw[qi]
+                if qi in twin:
+                    # average log-probabilities of the two orders (the twin's are reversed back)
+                    a, b = z - _lse(z), raw[twin[qi]][::-1]
+                    z = (a + b - _lse(b)) / 2
+                answers[q.qid] = self._answer(q, z)
             results.append({"model": self.name, "answers": answers,
                             "usage": {"input_tokens": sum(tokens[r] for r in used), "output_tokens": 0}})
         return results
