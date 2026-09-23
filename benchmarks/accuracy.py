@@ -20,7 +20,7 @@ sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.dirname(HERE))
 
 from common import load_agent  # noqa: E402
-from suites import DEFAULT, SUITES  # noqa: E402
+from suites import DEFAULT, MULTILINGUAL, SUITES  # noqa: E402
 
 CACHE = os.path.join(os.path.dirname(HERE), ".work", "suites")
 
@@ -38,7 +38,7 @@ JEV_PUBLISHED = {   # third-party numbers, never measured here (no TypeSafe API 
 
 def load_suite(name, n):
     os.makedirs(CACHE, exist_ok=True)
-    path = os.path.join(CACHE, "%s_%d.json" % (name, n))
+    path = os.path.join(CACHE, "%s_%d.json" % (name.replace("/", "_"), n))
     if os.path.exists(path):
         with open(path) as f:
             return json.load(f)
@@ -135,7 +135,7 @@ def main():
     ap.add_argument("--n", type=int, default=400)
     ap.add_argument("--out", default="")
     a = ap.parse_args()
-    names = [s for s in a.suites.split(",") if s]
+    names = MULTILINGUAL if a.suites == "multilingual" else [s for s in a.suites.split(",") if s]
     out = {"meta": {"n": a.n, "time": time.strftime("%Y-%m-%d %H:%M"), "suites": {
         s: {"relation": SUITES[s]["relation"], "note": SUITES[s]["note"]} for s in names}},
         "jev_published": JEV_PUBLISHED, "results": {}}

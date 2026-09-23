@@ -261,3 +261,13 @@ def xnli_en(n):
 DEFAULT = ["ag_news", "email_spam", "phishing", "rag_relevance", "support_triage", "typed_decisions",
            "emotion", "banking77", "jailbreak", "toxicity", "prompt_injection", "model_routing", "sst5",
            "massive_en", "xnli_en"]
+
+
+MASSIVE_LANGS = ["af", "am", "ar", "az", "bn", "cy", "da", "de", "el", "en", "es", "fa", "fi", "fr", "he", "hi", "hu",
+                 "hy", "id", "is", "it", "ja", "jv", "ka", "km", "kn", "ko", "lv", "ml", "mn", "ms", "my", "nb", "nl",
+                 "pl", "pt", "ro", "ru", "sl", "sq", "sv", "sw", "ta", "te", "th", "tl", "tr", "ur", "vi", "zh-CN",
+                 "zh-TW"]
+for _lg in MASSIVE_LANGS:
+    SUITES["massive." + _lg] = {"build": (lambda lg: lambda n: massive(lg, n))(_lg), "relation": "held-out",
+                                "note": "MASSIVE intent (%s), 20 options" % _lg}
+MULTILINGUAL = ["massive." + lg for lg in MASSIVE_LANGS]

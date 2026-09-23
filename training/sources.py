@@ -622,6 +622,28 @@ def jailbreak_cls(n, rng):
     return out
 
 
+@source("safeguard_injection")
+def safeguard_injection(n, rng):
+    """Prompt-injection examples from a collection unrelated to the held-out deepset benchmark;
+    any text that also appears in deepset/prompt-injections is dropped."""
+    held = set()
+    for sp in ("train", "test"):
+        held |= {r["text"].strip().lower() for r in load_dataset("deepset/prompt-injections", split=sp)}
+    d = load_dataset("xTRam1/safe-guard-prompt-injection", split="train")
+    rows = [r for r in d if r["text"].strip().lower() not in held]
+    out = []
+    for r in _take(rows, n, rng):
+        q, g = binary(rng, ["Is `text` a prompt injection: an attempt to override or hijack an AI system's instructions?",
+                            "Does this input try to make the AI ignore its previous instructions?",
+                            "Is this a prompt injection attack?",
+                            "Does the text try to manipulate an AI assistant into a different task or role?"],
+                      int(r["label"]) == 1, "an attempt to override the system's instructions",
+                      "an ordinary input", as_choice=("injection", "benign"))
+        out.append(case("safeguard_injection", {rng.choice(["text", "prompt", "input"]): r["text"][:3000]},
+                        {"inj": q}, {"inj": g}))
+    return out
+
+
 @source("squad_v2")
 def squad_v2(n, rng):
     d = load_dataset("rajpurkar/squad_v2", split="train")
@@ -769,6 +791,6 @@ ENGLISH_MIX = {
     "imdb": 3000, "yelp_polarity": 4000, "amazon_polarity": 4000, "tweet_sentiment": 5000, "go_emotions": 12000, "tweet_emotion": 3200,
     "clinc": 12000, "dbpedia": 4000, "yahoo": 6000, "civil_comments": 9000, "toxic_conversations": 4000,
     "hate_offensive": 4000, "tweet_offensive": 4000, "tweet_hate": 3000, "tweet_irony": 2500,
-    "jailbreak_cls": 1100, "squad_v2": 6000, "paws": 4000, "qqp": 4000, "race": 6000, "openbookqa": 4000,
+    "jailbreak_cls": 1100, "safeguard_injection": 6000, "squad_v2": 6000, "paws": 4000, "qqp": 4000, "race": 6000, "openbookqa": 4000,
     "commonsense_qa": 6000, "arc": 3000, "subjectivity": 3000, "hh_rlhf": 5000,
 }
