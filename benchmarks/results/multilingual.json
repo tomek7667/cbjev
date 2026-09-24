@@ -1,0 +1,1340 @@
+{
+  "meta": {
+    "n": 100,
+    "time": "2026-09-24 01:42",
+    "suites": {
+      "massive.af": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (af), 20 options"
+      },
+      "massive.am": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (am), 20 options"
+      },
+      "massive.ar": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (ar), 20 options"
+      },
+      "massive.az": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (az), 20 options"
+      },
+      "massive.bn": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (bn), 20 options"
+      },
+      "massive.cy": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (cy), 20 options"
+      },
+      "massive.da": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (da), 20 options"
+      },
+      "massive.de": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (de), 20 options"
+      },
+      "massive.el": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (el), 20 options"
+      },
+      "massive.en": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (en), 20 options"
+      },
+      "massive.es": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (es), 20 options"
+      },
+      "massive.fa": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (fa), 20 options"
+      },
+      "massive.fi": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (fi), 20 options"
+      },
+      "massive.fr": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (fr), 20 options"
+      },
+      "massive.he": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (he), 20 options"
+      },
+      "massive.hi": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (hi), 20 options"
+      },
+      "massive.hu": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (hu), 20 options"
+      },
+      "massive.hy": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (hy), 20 options"
+      },
+      "massive.id": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (id), 20 options"
+      },
+      "massive.is": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (is), 20 options"
+      },
+      "massive.it": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (it), 20 options"
+      },
+      "massive.ja": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (ja), 20 options"
+      },
+      "massive.jv": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (jv), 20 options"
+      },
+      "massive.ka": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (ka), 20 options"
+      },
+      "massive.km": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (km), 20 options"
+      },
+      "massive.kn": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (kn), 20 options"
+      },
+      "massive.ko": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (ko), 20 options"
+      },
+      "massive.lv": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (lv), 20 options"
+      },
+      "massive.ml": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (ml), 20 options"
+      },
+      "massive.mn": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (mn), 20 options"
+      },
+      "massive.ms": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (ms), 20 options"
+      },
+      "massive.my": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (my), 20 options"
+      },
+      "massive.nb": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (nb), 20 options"
+      },
+      "massive.nl": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (nl), 20 options"
+      },
+      "massive.pl": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (pl), 20 options"
+      },
+      "massive.pt": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (pt), 20 options"
+      },
+      "massive.ro": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (ro), 20 options"
+      },
+      "massive.ru": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (ru), 20 options"
+      },
+      "massive.sl": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (sl), 20 options"
+      },
+      "massive.sq": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (sq), 20 options"
+      },
+      "massive.sv": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (sv), 20 options"
+      },
+      "massive.sw": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (sw), 20 options"
+      },
+      "massive.ta": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (ta), 20 options"
+      },
+      "massive.te": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (te), 20 options"
+      },
+      "massive.th": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (th), 20 options"
+      },
+      "massive.tl": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (tl), 20 options"
+      },
+      "massive.tr": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (tr), 20 options"
+      },
+      "massive.ur": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (ur), 20 options"
+      },
+      "massive.vi": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (vi), 20 options"
+      },
+      "massive.zh-CN": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (zh-CN), 20 options"
+      },
+      "massive.zh-TW": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (zh-TW), 20 options"
+      }
+    }
+  },
+  "results": {
+    "laya-ml": {
+      "massive.af": {
+        "n": 100,
+        "accuracy": 0.35,
+        "macro_f1": 0.3411,
+        "ece": 0.4394,
+        "brier": 0.9812,
+        "nll": 4.197,
+        "mean_confidence": 0.7894,
+        "acc_at_50_coverage": 0.58,
+        "ms_per_case": 376.17
+      },
+      "massive.am": {
+        "n": 100,
+        "accuracy": 0.15,
+        "macro_f1": 0.1307,
+        "ece": 0.4839,
+        "brier": 1.2188,
+        "nll": 5.202,
+        "mean_confidence": 0.6339,
+        "acc_at_50_coverage": 0.26,
+        "ms_per_case": 119.21
+      },
+      "massive.ar": {
+        "n": 100,
+        "accuracy": 0.46,
+        "macro_f1": 0.4325,
+        "ece": 0.3151,
+        "brier": 0.8464,
+        "nll": 3.1839,
+        "mean_confidence": 0.7751,
+        "acc_at_50_coverage": 0.6,
+        "ms_per_case": 200.74
+      },
+      "massive.az": {
+        "n": 100,
+        "accuracy": 0.36,
+        "macro_f1": 0.3361,
+        "ece": 0.381,
+        "brier": 0.9578,
+        "nll": 3.5822,
+        "mean_confidence": 0.7211,
+        "acc_at_50_coverage": 0.54,
+        "ms_per_case": 164.52
+      },
+      "massive.bn": {
+        "n": 100,
+        "accuracy": 0.45,
+        "macro_f1": 0.44,
+        "ece": 0.354,
+        "brier": 0.8977,
+        "nll": 3.7103,
+        "mean_confidence": 0.7789,
+        "acc_at_50_coverage": 0.54,
+        "ms_per_case": 226.88
+      },
+      "massive.cy": {
+        "n": 100,
+        "accuracy": 0.13,
+        "macro_f1": 0.1217,
+        "ece": 0.5873,
+        "brier": 1.3123,
+        "nll": 5.5849,
+        "mean_confidence": 0.7173,
+        "acc_at_50_coverage": 0.22,
+        "ms_per_case": 308.19
+      },
+      "massive.da": {
+        "n": 100,
+        "accuracy": 0.52,
+        "macro_f1": 0.4956,
+        "ece": 0.315,
+        "brier": 0.7303,
+        "nll": 2.4213,
+        "mean_confidence": 0.8062,
+        "acc_at_50_coverage": 0.7,
+        "ms_per_case": 325.58
+      },
+      "massive.de": {
+        "n": 100,
+        "accuracy": 0.5,
+        "macro_f1": 0.4768,
+        "ece": 0.3358,
+        "brier": 0.7589,
+        "nll": 2.6788,
+        "mean_confidence": 0.8132,
+        "acc_at_50_coverage": 0.76,
+        "ms_per_case": 171.65
+      },
+      "massive.el": {
+        "n": 100,
+        "accuracy": 0.44,
+        "macro_f1": 0.4148,
+        "ece": 0.4297,
+        "brier": 0.9225,
+        "nll": 3.9579,
+        "mean_confidence": 0.801,
+        "acc_at_50_coverage": 0.58,
+        "ms_per_case": 275.88
+      },
+      "massive.en": {
+        "n": 100,
+        "accuracy": 0.71,
+        "macro_f1": 0.6689,
+        "ece": 0.2333,
+        "brier": 0.5063,
+        "nll": 2.1233,
+        "mean_confidence": 0.8876,
+        "acc_at_50_coverage": 0.92,
+        "ms_per_case": 303.21
+      },
+      "massive.es": {
+        "n": 100,
+        "accuracy": 0.58,
+        "macro_f1": 0.5213,
+        "ece": 0.2577,
+        "brier": 0.6722,
+        "nll": 2.2848,
+        "mean_confidence": 0.796,
+        "acc_at_50_coverage": 0.7,
+        "ms_per_case": 305.22
+      },
+      "massive.fa": {
+        "n": 100,
+        "accuracy": 0.51,
+        "macro_f1": 0.4728,
+        "ece": 0.2985,
+        "brier": 0.7934,
+        "nll": 2.955,
+        "mean_confidence": 0.7958,
+        "acc_at_50_coverage": 0.6,
+        "ms_per_case": 275.42
+      },
+      "massive.fi": {
+        "n": 100,
+        "accuracy": 0.34,
+        "macro_f1": 0.3282,
+        "ece": 0.3918,
+        "brier": 1.0128,
+        "nll": 4.0118,
+        "mean_confidence": 0.7316,
+        "acc_at_50_coverage": 0.46,
+        "ms_per_case": 231.42
+      },
+      "massive.fr": {
+        "n": 100,
+        "accuracy": 0.6,
+        "macro_f1": 0.5733,
+        "ece": 0.2484,
+        "brier": 0.6184,
+        "nll": 2.8009,
+        "mean_confidence": 0.8404,
+        "acc_at_50_coverage": 0.8,
+        "ms_per_case": 320.92
+      },
+      "massive.he": {
+        "n": 100,
+        "accuracy": 0.37,
+        "macro_f1": 0.3581,
+        "ece": 0.4185,
+        "brier": 0.9688,
+        "nll": 3.0121,
+        "mean_confidence": 0.787,
+        "acc_at_50_coverage": 0.58,
+        "ms_per_case": 352.47
+      },
+      "massive.hi": {
+        "n": 100,
+        "accuracy": 0.46,
+        "macro_f1": 0.409,
+        "ece": 0.3685,
+        "brier": 0.8783,
+        "nll": 3.3023,
+        "mean_confidence": 0.8174,
+        "acc_at_50_coverage": 0.58,
+        "ms_per_case": 171.68
+      },
+      "massive.hu": {
+        "n": 100,
+        "accuracy": 0.36,
+        "macro_f1": 0.3339,
+        "ece": 0.4005,
+        "brier": 1.0048,
+        "nll": 3.6608,
+        "mean_confidence": 0.7457,
+        "acc_at_50_coverage": 0.46,
+        "ms_per_case": 242.35
+      },
+      "massive.hy": {
+        "n": 100,
+        "accuracy": 0.25,
+        "macro_f1": 0.2364,
+        "ece": 0.5127,
+        "brier": 1.1724,
+        "nll": 4.5119,
+        "mean_confidence": 0.7627,
+        "acc_at_50_coverage": 0.3,
+        "ms_per_case": 235.81
+      },
+      "massive.id": {
+        "n": 100,
+        "accuracy": 0.51,
+        "macro_f1": 0.4973,
+        "ece": 0.3225,
+        "brier": 0.7524,
+        "nll": 2.2535,
+        "mean_confidence": 0.8281,
+        "acc_at_50_coverage": 0.76,
+        "ms_per_case": 238.82
+      },
+      "massive.is": {
+        "n": 100,
+        "accuracy": 0.35,
+        "macro_f1": 0.3355,
+        "ece": 0.4519,
+        "brier": 1.0318,
+        "nll": 5.4653,
+        "mean_confidence": 0.7949,
+        "acc_at_50_coverage": 0.46,
+        "ms_per_case": 288.17
+      },
+      "massive.it": {
+        "n": 100,
+        "accuracy": 0.52,
+        "macro_f1": 0.5034,
+        "ece": 0.3428,
+        "brier": 0.7809,
+        "nll": 3.2434,
+        "mean_confidence": 0.819,
+        "acc_at_50_coverage": 0.68,
+        "ms_per_case": 456.45
+      },
+      "massive.ja": {
+        "n": 100,
+        "accuracy": 0.64,
+        "macro_f1": 0.5896,
+        "ece": 0.2337,
+        "brier": 0.5645,
+        "nll": 1.9001,
+        "mean_confidence": 0.8737,
+        "acc_at_50_coverage": 0.84,
+        "ms_per_case": 183.86
+      },
+      "massive.jv": {
+        "n": 100,
+        "accuracy": 0.3,
+        "macro_f1": 0.2714,
+        "ece": 0.4842,
+        "brier": 1.1318,
+        "nll": 5.9754,
+        "mean_confidence": 0.7676,
+        "acc_at_50_coverage": 0.4,
+        "ms_per_case": 195.33
+      },
+      "massive.ka": {
+        "n": 100,
+        "accuracy": 0.15,
+        "macro_f1": 0.1449,
+        "ece": 0.5423,
+        "brier": 1.2967,
+        "nll": 4.5191,
+        "mean_confidence": 0.6835,
+        "acc_at_50_coverage": 0.22,
+        "ms_per_case": 179.89
+      },
+      "massive.km": {
+        "n": 100,
+        "accuracy": 0.2,
+        "macro_f1": 0.188,
+        "ece": 0.4454,
+        "brier": 1.1586,
+        "nll": 3.8908,
+        "mean_confidence": 0.6454,
+        "acc_at_50_coverage": 0.22,
+        "ms_per_case": 261.01
+      },
+      "massive.kn": {
+        "n": 100,
+        "accuracy": 0.3,
+        "macro_f1": 0.2465,
+        "ece": 0.388,
+        "brier": 1.028,
+        "nll": 3.6959,
+        "mean_confidence": 0.6578,
+        "acc_at_50_coverage": 0.36,
+        "ms_per_case": 245.78
+      },
+      "massive.ko": {
+        "n": 100,
+        "accuracy": 0.47,
+        "macro_f1": 0.4428,
+        "ece": 0.3108,
+        "brier": 0.7771,
+        "nll": 2.5117,
+        "mean_confidence": 0.7773,
+        "acc_at_50_coverage": 0.68,
+        "ms_per_case": 302.87
+      },
+      "massive.lv": {
+        "n": 100,
+        "accuracy": 0.31,
+        "macro_f1": 0.3022,
+        "ece": 0.472,
+        "brier": 1.0768,
+        "nll": 4.734,
+        "mean_confidence": 0.782,
+        "acc_at_50_coverage": 0.46,
+        "ms_per_case": 234.62
+      },
+      "massive.ml": {
+        "n": 100,
+        "accuracy": 0.28,
+        "macro_f1": 0.2712,
+        "ece": 0.4433,
+        "brier": 1.0956,
+        "nll": 4.0284,
+        "mean_confidence": 0.7072,
+        "acc_at_50_coverage": 0.32,
+        "ms_per_case": 276.39
+      },
+      "massive.mn": {
+        "n": 100,
+        "accuracy": 0.16,
+        "macro_f1": 0.1422,
+        "ece": 0.577,
+        "brier": 1.3206,
+        "nll": 5.6398,
+        "mean_confidence": 0.737,
+        "acc_at_50_coverage": 0.22,
+        "ms_per_case": 191.36
+      },
+      "massive.ms": {
+        "n": 100,
+        "accuracy": 0.41,
+        "macro_f1": 0.3787,
+        "ece": 0.4364,
+        "brier": 0.9581,
+        "nll": 4.2962,
+        "mean_confidence": 0.8269,
+        "acc_at_50_coverage": 0.58,
+        "ms_per_case": 328.67
+      },
+      "massive.my": {
+        "n": 100,
+        "accuracy": 0.16,
+        "macro_f1": 0.1424,
+        "ece": 0.4766,
+        "brier": 1.2443,
+        "nll": 3.9898,
+        "mean_confidence": 0.6219,
+        "acc_at_50_coverage": 0.1,
+        "ms_per_case": 239.67
+      },
+      "massive.nb": {
+        "n": 100,
+        "accuracy": 0.56,
+        "macro_f1": 0.5174,
+        "ece": 0.2938,
+        "brier": 0.7026,
+        "nll": 3.2041,
+        "mean_confidence": 0.8538,
+        "acc_at_50_coverage": 0.74,
+        "ms_per_case": 137.68
+      },
+      "massive.nl": {
+        "n": 100,
+        "accuracy": 0.47,
+        "macro_f1": 0.4069,
+        "ece": 0.397,
+        "brier": 0.874,
+        "nll": 3.949,
+        "mean_confidence": 0.8557,
+        "acc_at_50_coverage": 0.68,
+        "ms_per_case": 172.57
+      },
+      "massive.pl": {
+        "n": 100,
+        "accuracy": 0.5,
+        "macro_f1": 0.4781,
+        "ece": 0.3529,
+        "brier": 0.7994,
+        "nll": 2.6294,
+        "mean_confidence": 0.8407,
+        "acc_at_50_coverage": 0.76,
+        "ms_per_case": 373.12
+      },
+      "massive.pt": {
+        "n": 100,
+        "accuracy": 0.5,
+        "macro_f1": 0.4598,
+        "ece": 0.3405,
+        "brier": 0.7884,
+        "nll": 3.1395,
+        "mean_confidence": 0.8136,
+        "acc_at_50_coverage": 0.72,
+        "ms_per_case": 309.81
+      },
+      "massive.ro": {
+        "n": 100,
+        "accuracy": 0.37,
+        "macro_f1": 0.3426,
+        "ece": 0.3974,
+        "brier": 0.96,
+        "nll": 3.8641,
+        "mean_confidence": 0.7674,
+        "acc_at_50_coverage": 0.56,
+        "ms_per_case": 329.77
+      },
+      "massive.ru": {
+        "n": 100,
+        "accuracy": 0.57,
+        "macro_f1": 0.5342,
+        "ece": 0.2959,
+        "brier": 0.7319,
+        "nll": 3.3605,
+        "mean_confidence": 0.8594,
+        "acc_at_50_coverage": 0.7,
+        "ms_per_case": 350.49
+      },
+      "massive.sl": {
+        "n": 100,
+        "accuracy": 0.37,
+        "macro_f1": 0.348,
+        "ece": 0.4338,
+        "brier": 1.0103,
+        "nll": 3.7008,
+        "mean_confidence": 0.7952,
+        "acc_at_50_coverage": 0.48,
+        "ms_per_case": 382.03
+      },
+      "massive.sq": {
+        "n": 100,
+        "accuracy": 0.3,
+        "macro_f1": 0.2679,
+        "ece": 0.487,
+        "brier": 1.1324,
+        "nll": 3.9916,
+        "mean_confidence": 0.7795,
+        "acc_at_50_coverage": 0.4,
+        "ms_per_case": 198.94
+      },
+      "massive.sv": {
+        "n": 100,
+        "accuracy": 0.49,
+        "macro_f1": 0.4496,
+        "ece": 0.3411,
+        "brier": 0.7772,
+        "nll": 2.9899,
+        "mean_confidence": 0.8215,
+        "acc_at_50_coverage": 0.74,
+        "ms_per_case": 270.46
+      },
+      "massive.sw": {
+        "n": 100,
+        "accuracy": 0.23,
+        "macro_f1": 0.2259,
+        "ece": 0.4922,
+        "brier": 1.1812,
+        "nll": 4.4744,
+        "mean_confidence": 0.7118,
+        "acc_at_50_coverage": 0.3,
+        "ms_per_case": 249.85
+      },
+      "massive.ta": {
+        "n": 100,
+        "accuracy": 0.31,
+        "macro_f1": 0.2842,
+        "ece": 0.448,
+        "brier": 1.1179,
+        "nll": 4.2894,
+        "mean_confidence": 0.7371,
+        "acc_at_50_coverage": 0.34,
+        "ms_per_case": 240.14
+      },
+      "massive.te": {
+        "n": 100,
+        "accuracy": 0.22,
+        "macro_f1": 0.1935,
+        "ece": 0.4969,
+        "brier": 1.179,
+        "nll": 3.9182,
+        "mean_confidence": 0.7169,
+        "acc_at_50_coverage": 0.3,
+        "ms_per_case": 195.0
+      },
+      "massive.th": {
+        "n": 100,
+        "accuracy": 0.48,
+        "macro_f1": 0.4524,
+        "ece": 0.3564,
+        "brier": 0.8366,
+        "nll": 2.9092,
+        "mean_confidence": 0.8259,
+        "acc_at_50_coverage": 0.62,
+        "ms_per_case": 440.09
+      },
+      "massive.tl": {
+        "n": 100,
+        "accuracy": 0.35,
+        "macro_f1": 0.3033,
+        "ece": 0.4297,
+        "brier": 1.011,
+        "nll": 3.6846,
+        "mean_confidence": 0.7797,
+        "acc_at_50_coverage": 0.54,
+        "ms_per_case": 383.53
+      },
+      "massive.tr": {
+        "n": 100,
+        "accuracy": 0.4,
+        "macro_f1": 0.3846,
+        "ece": 0.4004,
+        "brier": 0.953,
+        "nll": 3.8268,
+        "mean_confidence": 0.8004,
+        "acc_at_50_coverage": 0.6,
+        "ms_per_case": 309.28
+      },
+      "massive.ur": {
+        "n": 100,
+        "accuracy": 0.42,
+        "macro_f1": 0.3947,
+        "ece": 0.3356,
+        "brier": 0.8646,
+        "nll": 3.2604,
+        "mean_confidence": 0.7556,
+        "acc_at_50_coverage": 0.6,
+        "ms_per_case": 291.71
+      },
+      "massive.vi": {
+        "n": 100,
+        "accuracy": 0.34,
+        "macro_f1": 0.3059,
+        "ece": 0.4636,
+        "brier": 1.0617,
+        "nll": 4.4493,
+        "mean_confidence": 0.778,
+        "acc_at_50_coverage": 0.46,
+        "ms_per_case": 232.18
+      },
+      "massive.zh-CN": {
+        "n": 100,
+        "accuracy": 0.65,
+        "macro_f1": 0.605,
+        "ece": 0.2192,
+        "brier": 0.5484,
+        "nll": 2.1772,
+        "mean_confidence": 0.8591,
+        "acc_at_50_coverage": 0.84,
+        "ms_per_case": 292.17
+      },
+      "massive.zh-TW": {
+        "n": 100,
+        "accuracy": 0.61,
+        "macro_f1": 0.5565,
+        "ece": 0.2662,
+        "brier": 0.6563,
+        "nll": 2.912,
+        "mean_confidence": 0.8558,
+        "acc_at_50_coverage": 0.78,
+        "ms_per_case": 425.34
+      }
+    },
+    "cbjev-multilingual": {
+      "massive.af": {
+        "n": 100,
+        "accuracy": 0.4,
+        "macro_f1": 0.3603,
+        "ece": 0.2032,
+        "brier": 0.7529,
+        "nll": 2.0137,
+        "mean_confidence": 0.6032,
+        "acc_at_50_coverage": 0.62,
+        "ms_per_case": 9.11
+      },
+      "massive.am": {
+        "n": 100,
+        "accuracy": 0.16,
+        "macro_f1": 0.1511,
+        "ece": 0.2578,
+        "brier": 0.997,
+        "nll": 2.801,
+        "mean_confidence": 0.4153,
+        "acc_at_50_coverage": 0.24,
+        "ms_per_case": 7.07
+      },
+      "massive.ar": {
+        "n": 100,
+        "accuracy": 0.48,
+        "macro_f1": 0.4516,
+        "ece": 0.1232,
+        "brier": 0.672,
+        "nll": 1.7677,
+        "mean_confidence": 0.5616,
+        "acc_at_50_coverage": 0.7,
+        "ms_per_case": 6.97
+      },
+      "massive.az": {
+        "n": 100,
+        "accuracy": 0.39,
+        "macro_f1": 0.3695,
+        "ece": 0.1698,
+        "brier": 0.7858,
+        "nll": 2.0852,
+        "mean_confidence": 0.5316,
+        "acc_at_50_coverage": 0.52,
+        "ms_per_case": 6.95
+      },
+      "massive.bn": {
+        "n": 100,
+        "accuracy": 0.42,
+        "macro_f1": 0.4103,
+        "ece": 0.202,
+        "brier": 0.8068,
+        "nll": 2.1138,
+        "mean_confidence": 0.5675,
+        "acc_at_50_coverage": 0.56,
+        "ms_per_case": 7.01
+      },
+      "massive.cy": {
+        "n": 100,
+        "accuracy": 0.21,
+        "macro_f1": 0.2031,
+        "ece": 0.2868,
+        "brier": 0.9797,
+        "nll": 2.9357,
+        "mean_confidence": 0.4956,
+        "acc_at_50_coverage": 0.34,
+        "ms_per_case": 7.04
+      },
+      "massive.da": {
+        "n": 100,
+        "accuracy": 0.56,
+        "macro_f1": 0.504,
+        "ece": 0.1531,
+        "brier": 0.5903,
+        "nll": 1.5058,
+        "mean_confidence": 0.6181,
+        "acc_at_50_coverage": 0.8,
+        "ms_per_case": 6.98
+      },
+      "massive.de": {
+        "n": 100,
+        "accuracy": 0.59,
+        "macro_f1": 0.5686,
+        "ece": 0.1758,
+        "brier": 0.5787,
+        "nll": 1.4041,
+        "mean_confidence": 0.6558,
+        "acc_at_50_coverage": 0.78,
+        "ms_per_case": 6.92
+      },
+      "massive.el": {
+        "n": 100,
+        "accuracy": 0.42,
+        "macro_f1": 0.3832,
+        "ece": 0.1583,
+        "brier": 0.7252,
+        "nll": 1.9934,
+        "mean_confidence": 0.5632,
+        "acc_at_50_coverage": 0.68,
+        "ms_per_case": 7.01
+      },
+      "massive.en": {
+        "n": 100,
+        "accuracy": 0.75,
+        "macro_f1": 0.7153,
+        "ece": 0.1184,
+        "brier": 0.3636,
+        "nll": 0.8562,
+        "mean_confidence": 0.7779,
+        "acc_at_50_coverage": 0.98,
+        "ms_per_case": 6.93
+      },
+      "massive.es": {
+        "n": 100,
+        "accuracy": 0.56,
+        "macro_f1": 0.5131,
+        "ece": 0.1748,
+        "brier": 0.5819,
+        "nll": 1.4298,
+        "mean_confidence": 0.6599,
+        "acc_at_50_coverage": 0.82,
+        "ms_per_case": 6.94
+      },
+      "massive.fa": {
+        "n": 100,
+        "accuracy": 0.48,
+        "macro_f1": 0.4477,
+        "ece": 0.1715,
+        "brier": 0.6784,
+        "nll": 1.7284,
+        "mean_confidence": 0.6248,
+        "acc_at_50_coverage": 0.66,
+        "ms_per_case": 7.0
+      },
+      "massive.fi": {
+        "n": 100,
+        "accuracy": 0.38,
+        "macro_f1": 0.3519,
+        "ece": 0.1711,
+        "brier": 0.7595,
+        "nll": 2.0426,
+        "mean_confidence": 0.501,
+        "acc_at_50_coverage": 0.6,
+        "ms_per_case": 7.01
+      },
+      "massive.fr": {
+        "n": 100,
+        "accuracy": 0.65,
+        "macro_f1": 0.6176,
+        "ece": 0.1104,
+        "brier": 0.5165,
+        "nll": 1.3411,
+        "mean_confidence": 0.6982,
+        "acc_at_50_coverage": 0.82,
+        "ms_per_case": 6.98
+      },
+      "massive.he": {
+        "n": 100,
+        "accuracy": 0.42,
+        "macro_f1": 0.3889,
+        "ece": 0.2065,
+        "brier": 0.7069,
+        "nll": 1.8232,
+        "mean_confidence": 0.5424,
+        "acc_at_50_coverage": 0.66,
+        "ms_per_case": 7.03
+      },
+      "massive.hi": {
+        "n": 100,
+        "accuracy": 0.49,
+        "macro_f1": 0.4488,
+        "ece": 0.1476,
+        "brier": 0.6746,
+        "nll": 1.731,
+        "mean_confidence": 0.6145,
+        "acc_at_50_coverage": 0.72,
+        "ms_per_case": 6.99
+      },
+      "massive.hu": {
+        "n": 100,
+        "accuracy": 0.37,
+        "macro_f1": 0.333,
+        "ece": 0.1725,
+        "brier": 0.7918,
+        "nll": 2.3212,
+        "mean_confidence": 0.5252,
+        "acc_at_50_coverage": 0.52,
+        "ms_per_case": 6.97
+      },
+      "massive.hy": {
+        "n": 100,
+        "accuracy": 0.32,
+        "macro_f1": 0.3104,
+        "ece": 0.1475,
+        "brier": 0.87,
+        "nll": 2.4209,
+        "mean_confidence": 0.4675,
+        "acc_at_50_coverage": 0.42,
+        "ms_per_case": 7.06
+      },
+      "massive.id": {
+        "n": 100,
+        "accuracy": 0.59,
+        "macro_f1": 0.5693,
+        "ece": 0.102,
+        "brier": 0.548,
+        "nll": 1.3622,
+        "mean_confidence": 0.6657,
+        "acc_at_50_coverage": 0.84,
+        "ms_per_case": 6.94
+      },
+      "massive.is": {
+        "n": 100,
+        "accuracy": 0.35,
+        "macro_f1": 0.3296,
+        "ece": 0.2616,
+        "brier": 0.8486,
+        "nll": 2.335,
+        "mean_confidence": 0.5836,
+        "acc_at_50_coverage": 0.54,
+        "ms_per_case": 7.01
+      },
+      "massive.it": {
+        "n": 100,
+        "accuracy": 0.57,
+        "macro_f1": 0.5254,
+        "ece": 0.1411,
+        "brier": 0.5884,
+        "nll": 1.5308,
+        "mean_confidence": 0.5901,
+        "acc_at_50_coverage": 0.76,
+        "ms_per_case": 7.01
+      },
+      "massive.ja": {
+        "n": 100,
+        "accuracy": 0.68,
+        "macro_f1": 0.6555,
+        "ece": 0.1394,
+        "brier": 0.4746,
+        "nll": 1.133,
+        "mean_confidence": 0.7371,
+        "acc_at_50_coverage": 0.84,
+        "ms_per_case": 6.92
+      },
+      "massive.jv": {
+        "n": 100,
+        "accuracy": 0.34,
+        "macro_f1": 0.2938,
+        "ece": 0.2348,
+        "brier": 0.8989,
+        "nll": 2.7011,
+        "mean_confidence": 0.5663,
+        "acc_at_50_coverage": 0.44,
+        "ms_per_case": 6.89
+      },
+      "massive.ka": {
+        "n": 100,
+        "accuracy": 0.16,
+        "macro_f1": 0.1553,
+        "ece": 0.3359,
+        "brier": 1.0382,
+        "nll": 2.8826,
+        "mean_confidence": 0.465,
+        "acc_at_50_coverage": 0.16,
+        "ms_per_case": 6.98
+      },
+      "massive.km": {
+        "n": 100,
+        "accuracy": 0.25,
+        "macro_f1": 0.2537,
+        "ece": 0.1961,
+        "brier": 0.9367,
+        "nll": 2.7125,
+        "mean_confidence": 0.4203,
+        "acc_at_50_coverage": 0.34,
+        "ms_per_case": 7.28
+      },
+      "massive.kn": {
+        "n": 100,
+        "accuracy": 0.35,
+        "macro_f1": 0.3108,
+        "ece": 0.13,
+        "brier": 0.8226,
+        "nll": 2.2956,
+        "mean_confidence": 0.4729,
+        "acc_at_50_coverage": 0.46,
+        "ms_per_case": 7.04
+      },
+      "massive.ko": {
+        "n": 100,
+        "accuracy": 0.51,
+        "macro_f1": 0.4657,
+        "ece": 0.1676,
+        "brier": 0.6451,
+        "nll": 1.6514,
+        "mean_confidence": 0.6096,
+        "acc_at_50_coverage": 0.7,
+        "ms_per_case": 7.01
+      },
+      "massive.lv": {
+        "n": 100,
+        "accuracy": 0.33,
+        "macro_f1": 0.3325,
+        "ece": 0.2087,
+        "brier": 0.8757,
+        "nll": 2.4593,
+        "mean_confidence": 0.5387,
+        "acc_at_50_coverage": 0.42,
+        "ms_per_case": 6.93
+      },
+      "massive.ml": {
+        "n": 100,
+        "accuracy": 0.32,
+        "macro_f1": 0.3263,
+        "ece": 0.1708,
+        "brier": 0.8395,
+        "nll": 2.2795,
+        "mean_confidence": 0.468,
+        "acc_at_50_coverage": 0.46,
+        "ms_per_case": 7.04
+      },
+      "massive.mn": {
+        "n": 100,
+        "accuracy": 0.21,
+        "macro_f1": 0.1787,
+        "ece": 0.2817,
+        "brier": 0.9649,
+        "nll": 2.8523,
+        "mean_confidence": 0.4634,
+        "acc_at_50_coverage": 0.3,
+        "ms_per_case": 7.05
+      },
+      "massive.ms": {
+        "n": 100,
+        "accuracy": 0.45,
+        "macro_f1": 0.4227,
+        "ece": 0.1993,
+        "brier": 0.7312,
+        "nll": 1.9179,
+        "mean_confidence": 0.6395,
+        "acc_at_50_coverage": 0.66,
+        "ms_per_case": 6.97
+      },
+      "massive.my": {
+        "n": 100,
+        "accuracy": 0.21,
+        "macro_f1": 0.1982,
+        "ece": 0.1926,
+        "brier": 0.9737,
+        "nll": 2.7421,
+        "mean_confidence": 0.3898,
+        "acc_at_50_coverage": 0.22,
+        "ms_per_case": 7.02
+      },
+      "massive.nb": {
+        "n": 100,
+        "accuracy": 0.57,
+        "macro_f1": 0.5076,
+        "ece": 0.1144,
+        "brier": 0.5909,
+        "nll": 1.5529,
+        "mean_confidence": 0.679,
+        "acc_at_50_coverage": 0.82,
+        "ms_per_case": 6.98
+      },
+      "massive.nl": {
+        "n": 100,
+        "accuracy": 0.51,
+        "macro_f1": 0.4557,
+        "ece": 0.1794,
+        "brier": 0.6355,
+        "nll": 1.6324,
+        "mean_confidence": 0.6492,
+        "acc_at_50_coverage": 0.78,
+        "ms_per_case": 6.9
+      },
+      "massive.pl": {
+        "n": 100,
+        "accuracy": 0.53,
+        "macro_f1": 0.5134,
+        "ece": 0.1733,
+        "brier": 0.6318,
+        "nll": 1.6561,
+        "mean_confidence": 0.6283,
+        "acc_at_50_coverage": 0.76,
+        "ms_per_case": 6.98
+      },
+      "massive.pt": {
+        "n": 100,
+        "accuracy": 0.5,
+        "macro_f1": 0.4653,
+        "ece": 0.1864,
+        "brier": 0.6312,
+        "nll": 1.5344,
+        "mean_confidence": 0.6395,
+        "acc_at_50_coverage": 0.78,
+        "ms_per_case": 7.01
+      },
+      "massive.ro": {
+        "n": 100,
+        "accuracy": 0.42,
+        "macro_f1": 0.3669,
+        "ece": 0.1472,
+        "brier": 0.7183,
+        "nll": 1.9658,
+        "mean_confidence": 0.5554,
+        "acc_at_50_coverage": 0.58,
+        "ms_per_case": 6.96
+      },
+      "massive.ru": {
+        "n": 100,
+        "accuracy": 0.57,
+        "macro_f1": 0.5508,
+        "ece": 0.1392,
+        "brier": 0.603,
+        "nll": 1.5228,
+        "mean_confidence": 0.6921,
+        "acc_at_50_coverage": 0.78,
+        "ms_per_case": 6.93
+      },
+      "massive.sl": {
+        "n": 100,
+        "accuracy": 0.35,
+        "macro_f1": 0.3243,
+        "ece": 0.2202,
+        "brier": 0.8029,
+        "nll": 2.1521,
+        "mean_confidence": 0.5539,
+        "acc_at_50_coverage": 0.58,
+        "ms_per_case": 7.02
+      },
+      "massive.sq": {
+        "n": 100,
+        "accuracy": 0.35,
+        "macro_f1": 0.3133,
+        "ece": 0.1859,
+        "brier": 0.8376,
+        "nll": 2.1775,
+        "mean_confidence": 0.5261,
+        "acc_at_50_coverage": 0.42,
+        "ms_per_case": 7.04
+      },
+      "massive.sv": {
+        "n": 100,
+        "accuracy": 0.57,
+        "macro_f1": 0.5384,
+        "ece": 0.1422,
+        "brier": 0.6063,
+        "nll": 1.5848,
+        "mean_confidence": 0.6684,
+        "acc_at_50_coverage": 0.76,
+        "ms_per_case": 6.94
+      },
+      "massive.sw": {
+        "n": 100,
+        "accuracy": 0.31,
+        "macro_f1": 0.3038,
+        "ece": 0.1954,
+        "brier": 0.8761,
+        "nll": 2.5192,
+        "mean_confidence": 0.4869,
+        "acc_at_50_coverage": 0.42,
+        "ms_per_case": 7.0
+      },
+      "massive.ta": {
+        "n": 100,
+        "accuracy": 0.3,
+        "macro_f1": 0.2774,
+        "ece": 0.2263,
+        "brier": 0.8966,
+        "nll": 2.4818,
+        "mean_confidence": 0.5162,
+        "acc_at_50_coverage": 0.42,
+        "ms_per_case": 7.01
+      },
+      "massive.te": {
+        "n": 100,
+        "accuracy": 0.35,
+        "macro_f1": 0.3255,
+        "ece": 0.1424,
+        "brier": 0.7958,
+        "nll": 2.193,
+        "mean_confidence": 0.4634,
+        "acc_at_50_coverage": 0.5,
+        "ms_per_case": 7.06
+      },
+      "massive.th": {
+        "n": 100,
+        "accuracy": 0.55,
+        "macro_f1": 0.5257,
+        "ece": 0.1467,
+        "brier": 0.6043,
+        "nll": 1.5821,
+        "mean_confidence": 0.6415,
+        "acc_at_50_coverage": 0.76,
+        "ms_per_case": 6.93
+      },
+      "massive.tl": {
+        "n": 100,
+        "accuracy": 0.39,
+        "macro_f1": 0.3574,
+        "ece": 0.206,
+        "brier": 0.779,
+        "nll": 2.1868,
+        "mean_confidence": 0.5861,
+        "acc_at_50_coverage": 0.58,
+        "ms_per_case": 6.98
+      },
+      "massive.tr": {
+        "n": 100,
+        "accuracy": 0.44,
+        "macro_f1": 0.4223,
+        "ece": 0.2358,
+        "brier": 0.7432,
+        "nll": 1.8535,
+        "mean_confidence": 0.6466,
+        "acc_at_50_coverage": 0.64,
+        "ms_per_case": 7.0
+      },
+      "massive.ur": {
+        "n": 100,
+        "accuracy": 0.45,
+        "macro_f1": 0.4219,
+        "ece": 0.1269,
+        "brier": 0.7018,
+        "nll": 1.8958,
+        "mean_confidence": 0.5681,
+        "acc_at_50_coverage": 0.66,
+        "ms_per_case": 6.99
+      },
+      "massive.vi": {
+        "n": 100,
+        "accuracy": 0.42,
+        "macro_f1": 0.3658,
+        "ece": 0.2084,
+        "brier": 0.8146,
+        "nll": 2.2376,
+        "mean_confidence": 0.5836,
+        "acc_at_50_coverage": 0.54,
+        "ms_per_case": 7.02
+      },
+      "massive.zh-CN": {
+        "n": 100,
+        "accuracy": 0.66,
+        "macro_f1": 0.6105,
+        "ece": 0.1216,
+        "brier": 0.4698,
+        "nll": 1.1951,
+        "mean_confidence": 0.6928,
+        "acc_at_50_coverage": 0.86,
+        "ms_per_case": 6.9
+      },
+      "massive.zh-TW": {
+        "n": 100,
+        "accuracy": 0.64,
+        "macro_f1": 0.6024,
+        "ece": 0.1452,
+        "brier": 0.5469,
+        "nll": 1.3475,
+        "mean_confidence": 0.653,
+        "acc_at_50_coverage": 0.78,
+        "ms_per_case": 4.64
+      }
+    }
+  }
+}

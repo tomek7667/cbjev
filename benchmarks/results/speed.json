@@ -1,0 +1,84 @@
+{
+  "meta": {
+    "gpu": "NVIDIA GeForce RTX 4090",
+    "torch": "2.14.0+cu130",
+    "reps": 60,
+    "engines": [
+      "laya",
+      "laya-fast",
+      "cbjev"
+    ]
+  },
+  "rows": [
+    {
+      "case": "short ticket",
+      "questions": 1,
+      "laya": 11.21,
+      "laya-fast": 5.35,
+      "cbjev": 3.02
+    },
+    {
+      "case": "short ticket",
+      "questions": 3,
+      "laya": 10.63,
+      "laya-fast": 7.34,
+      "cbjev": 3.6
+    },
+    {
+      "case": "short ticket",
+      "questions": 5,
+      "laya": 14.37,
+      "laya-fast": 9.04,
+      "cbjev": 4.16
+    },
+    {
+      "case": "short ticket",
+      "questions": 10,
+      "laya": 20.2,
+      "laya-fast": 18.2,
+      "cbjev": 7.54
+    },
+    {
+      "case": "short ticket",
+      "questions": 30,
+      "laya": 43.78,
+      "laya-fast": 38.21,
+      "cbjev": 20.58
+    },
+    {
+      "case": "short ticket",
+      "questions": 50,
+      "laya": 70.67,
+      "laya-fast": 71.93,
+      "cbjev": 42.59
+    },
+    {
+      "case": "~500-token doc",
+      "questions": 1,
+      "laya": 12.89,
+      "laya-fast": 10.38,
+      "cbjev": 6.88
+    },
+    {
+      "case": "~500-token doc",
+      "questions": 5,
+      "laya": 40.47,
+      "laya-fast": 39.7,
+      "cbjev": 9.68
+    },
+    {
+      "case": "~500-token doc",
+      "questions": 10,
+      "laya": 75.78,
+      "laya-fast": 77.79,
+      "cbjev": 11.35
+    },
+    {
+      "case": "~500-token doc",
+      "questions": 30,
+      "laya": 276.29,
+      "laya-fast": 172.44,
+      "cbjev": 31.44
+    }
+  ]
+}

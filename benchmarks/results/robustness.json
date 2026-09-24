@@ -1,0 +1,44 @@
+{
+  "engines": [
+    "laya",
+    "laya-td",
+    "cbjev"
+  ],
+  "rows": {
+    "ag_news": {
+      "laya": 0.01,
+      "laya-td": 0.0125,
+      "cbjev": 0.0
+    },
+    "emotion": {
+      "laya": 0.0475,
+      "laya-td": 0.0525,
+      "cbjev": 0.0025
+    },
+    "support_triage": {
+      "laya": 0.11,
+      "laya-td": 0.145,
+      "cbjev": 0.005
+    },
+    "model_routing": {
+      "laya": 0.1178,
+      "laya-td": 0.1228,
+      "cbjev": 0.0025
+    },
+    "massive_en": {
+      "laya": 0.1775,
+      "laya-td": 0.125,
+      "cbjev": 0.0025
+    },
+    "xnli_en": {
+      "laya": 0.01,
+      "laya-td": 0.0125,
+      "cbjev": 0.0
+    },
+    "mean": {
+      "laya": 0.0788,
+      "laya-td": 0.0784,
+      "cbjev": 0.0021
+    }
+  }
+}

@@ -11,7 +11,9 @@ Everything else (CPU, MPS, or `graphs=False`) runs the same forward eagerly.
 """
 from __future__ import annotations
 
+import os
 import threading
+import warnings
 from typing import Dict, List, Optional, Tuple
 
 import numpy as np
@@ -20,11 +22,15 @@ import torch
 from .model import DecisionNet
 
 
-def _bucket(n: int, steps=(32, 64, 96, 128, 160, 192, 256, 320, 384, 448, 512, 640, 768, 896, 1024)) -> int:
-    for s in steps:
-        if n <= s:
-            return s
-    return (n + 255) // 256 * 256
+def _bucket(n: int, steps=None) -> int:
+    """Pad lengths to multiples of 32 up to 1024 (<= 31 wasted tokens), then of 128."""
+    if steps is not None:
+        for s in steps:
+            if n <= s:
+                return s
+    if n <= 1024:
+        return max(32, (n + 31) // 32 * 32)
+    return (n + 127) // 128 * 128
 
 
 def _rows_bucket(n: int) -> int:
@@ -48,9 +54,17 @@ class Batch:
 
 class Engine:
     def __init__(self, net: DecisionNet, device: torch.device, dtype: torch.dtype, packed: bool,
-                 graphs: bool = True, max_graphs: int = 48):
+                 graphs: bool = True, max_graphs: int = 64, compile: Optional[bool] = None):
         self.net, self.device, self.dtype, self.packed = net, device, dtype, packed
         self.graphs = graphs and device.type == "cuda"
+        if compile is None:
+            compile = device.type == "cuda" and os.environ.get("CBJEV_COMPILE", "1") != "0"
+        self._eager_layer = None
+        if compile:
+            # fuse each layer's norms, RoPE, GELU gate and casts; one dynamic-shape compile
+            # (a few seconds, cached on disk) serves every bucket, then graphs replay it
+            self._eager_layer = net.encoder._layer
+            net.encoder._layer = torch.compile(net.encoder._layer, dynamic=True)
         self.max_graphs = max_graphs
         self._graphs: Dict[Tuple[int, int, int], Tuple] = {}
         self._lock = threading.Lock()
@@ -96,6 +110,19 @@ class Engine:
     @torch.inference_mode()
     def run(self, b: Batch) -> np.ndarray:
         """Marker logits [B, M] as float32 numpy."""
+        try:
+            return self._run(b)
+        except Exception as e:
+            if self._eager_layer is None:
+                raise
+            warnings.warn("cbjev: compiled forward failed (%s); falling back to eager" % str(e)[:200],
+                          RuntimeWarning, stacklevel=3)
+            self.net.encoder._layer = self._eager_layer
+            self._eager_layer = None
+            self.clear()
+            return self._run(b)
+
+    def _run(self, b: Batch) -> np.ndarray:
         t = self._to_device(b)
         if not self.graphs:
             return self._eager(t).float().cpu().numpy()

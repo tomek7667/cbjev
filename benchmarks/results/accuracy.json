@@ -1,0 +1,641 @@
+{
+  "meta": {
+    "n": 400,
+    "time": "2026-09-24 10:23",
+    "suites": {
+      "ag_news": {
+        "relation": "train-split",
+        "note": "Jev 0.910 (published)"
+      },
+      "email_spam": {
+        "relation": "train-split",
+        "note": ""
+      },
+      "phishing": {
+        "relation": "train-split",
+        "note": "rows 0-5999 are never trained on"
+      },
+      "rag_relevance": {
+        "relation": "train-split",
+        "note": "MS MARCO validation"
+      },
+      "support_triage": {
+        "relation": "train-split",
+        "note": "first 2,000 English tickets are never trained on"
+      },
+      "typed_decisions": {
+        "relation": "train-split",
+        "note": "Jev 0.727 (published); 400 cases x 5 decisions"
+      },
+      "emotion": {
+        "relation": "held-out",
+        "note": "DAIR emotion; Jev 0.480 (published)"
+      },
+      "banking77": {
+        "relation": "held-out",
+        "note": "all 77 labels in one question; Jev 0.870 (published, 72 labels)"
+      },
+      "jailbreak": {
+        "relation": "held-out",
+        "note": "lmsys/toxic-chat jailbreaking flag, balanced"
+      },
+      "toxicity": {
+        "relation": "held-out",
+        "note": "lmsys/toxic-chat toxicity flag, balanced"
+      },
+      "prompt_injection": {
+        "relation": "held-out",
+        "note": "deepset/prompt-injections test split"
+      },
+      "model_routing": {
+        "relation": "held-out",
+        "note": "gsm8k / mbpp / ag_news requests -> domain"
+      },
+      "sst5": {
+        "relation": "held-out",
+        "note": "SST-5 as a 5-level score question"
+      },
+      "massive_en": {
+        "relation": "held-out",
+        "note": "MASSIVE intent (English), 20 options per question"
+      },
+      "xnli_en": {
+        "relation": "held-out",
+        "note": "XNLI English test (MNLI-style; MNLI train is in cbjev's mix)"
+      }
+    }
+  },
+  "jev_published": {
+    "ag_news": {
+      "accuracy": 0.91,
+      "source": "AbdelStark/jev-benchmarks"
+    },
+    "emotion": {
+      "accuracy": 0.48,
+      "source": "AbdelStark/jev-benchmarks"
+    },
+    "banking77": {
+      "accuracy": 0.87,
+      "note": "72 labels",
+      "source": "AbdelStark/jev-benchmarks"
+    },
+    "typed_decisions": {
+      "accuracy": 0.727,
+      "soft_accuracy": 0.58,
+      "ece": 0.144,
+      "score_mae": 0.391,
+      "source": "LocalLLaMA/typed-decisions leaderboard via Laya README"
+    },
+    "latency_p50_ms": "236-276 (hosted API; AbdelStark, nibzard)",
+    "ece": {
+      "value": 0.246,
+      "source": "nibzard/decision-model-benchmark"
+    },
+    "option_order_flip_rate": {
+      "value": 0.13,
+      "source": "nibzard/decision-model-benchmark"
+    }
+  },
+  "results": {
+    "laya": {
+      "ag_news": {
+        "n": 400,
+        "accuracy": 0.9525,
+        "macro_f1": 0.9468,
+        "ece": 0.034,
+        "brier": 0.0806,
+        "nll": 0.1636,
+        "mean_confidence": 0.9222,
+        "acc_at_50_coverage": 1.0,
+        "ms_per_case": 10.01
+      },
+      "email_spam": {
+        "n": 400,
+        "accuracy": 0.9975,
+        "macro_f1": 0.9975,
+        "ece": 0.0108,
+        "brier": 0.0052,
+        "nll": 0.0125,
+        "mean_confidence": 0.9893,
+        "acc_at_50_coverage": 1.0,
+        "ms_per_case": 9.76
+      },
+      "phishing": {
+        "n": 400,
+        "accuracy": 0.98,
+        "macro_f1": 0.9789,
+        "ece": 0.0135,
+        "brier": 0.0294,
+        "nll": 0.0482,
+        "mean_confidence": 0.9734,
+        "acc_at_50_coverage": 1.0,
+        "ms_per_case": 9.69
+      },
+      "rag_relevance": {
+        "n": 400,
+        "accuracy": 0.6275,
+        "macro_f1": 0.6265,
+        "ece": 0.127,
+        "brier": 0.4749,
+        "nll": 0.6826,
+        "mean_confidence": 0.7519,
+        "acc_at_50_coverage": 0.715,
+        "ms_per_case": 9.18
+      },
+      "support_triage": {
+        "n": 400,
+        "accuracy": 0.5025,
+        "macro_f1": 0.4819,
+        "ece": 0.0955,
+        "brier": 0.6436,
+        "nll": 1.4232,
+        "mean_confidence": 0.506,
+        "acc_at_50_coverage": 0.595,
+        "ms_per_case": 9.39
+      },
+      "typed_decisions": {
+        "n": 2000,
+        "accuracy": 0.3605,
+        "macro_f1": 0.3218,
+        "ece": 0.1756,
+        "brier": 0.7497,
+        "nll": 1.3314,
+        "mean_confidence": 0.5361,
+        "acc_at_50_coverage": 0.428,
+        "soft_accuracy": 0.3313,
+        "score_mae": 0.6947,
+        "ms_per_case": 20.43,
+        "by_workflow": {
+          "agent_trace_observability": 0.386,
+          "customer_service": 0.382,
+          "invoice_processing": 0.362,
+          "security_incidents": 0.312
+        },
+        "by_type": {
+          "choice": 0.2883,
+          "noul": 0.4833,
+          "score": 0.3225
+        }
+      },
+      "emotion": {
+        "n": 400,
+        "accuracy": 0.5925,
+        "macro_f1": 0.4709,
+        "ece": 0.3087,
+        "brier": 0.6958,
+        "nll": 2.1833,
+        "mean_confidence": 0.9012,
+        "acc_at_50_coverage": 0.72,
+        "ms_per_case": 8.28
+      },
+      "banking77": {
+        "n": 400,
+        "accuracy": 0.425,
+        "macro_f1": 0.1148,
+        "ece": 0.3788,
+        "brier": 0.9226,
+        "nll": 6.3574,
+        "mean_confidence": 0.8008,
+        "acc_at_50_coverage": 0.595,
+        "ms_per_case": 10.28
+      },
+      "jailbreak": {
+        "n": 400,
+        "accuracy": 0.715,
+        "macro_f1": 0.6908,
+        "ece": 0.2549,
+        "brier": 0.534,
+        "nll": 2.8849,
+        "mean_confidence": 0.9649,
+        "acc_at_50_coverage": 0.805,
+        "ms_per_case": 9.43
+      },
+      "toxicity": {
+        "n": 400,
+        "accuracy": 0.53,
+        "macro_f1": 0.4003,
+        "ece": 0.2963,
+        "brier": 0.6018,
+        "nll": 0.8878,
+        "mean_confidence": 0.8245,
+        "acc_at_50_coverage": 0.73,
+        "ms_per_case": 8.78
+      },
+      "prompt_injection": {
+        "n": 116,
+        "accuracy": 0.7328,
+        "macro_f1": 0.7175,
+        "ece": 0.2484,
+        "brier": 0.4967,
+        "nll": 3.0461,
+        "mean_confidence": 0.9703,
+        "acc_at_50_coverage": 0.931,
+        "ms_per_case": 9.11
+      },
+      "model_routing": {
+        "n": 399,
+        "accuracy": 0.6366,
+        "macro_f1": 0.3188,
+        "ece": 0.0813,
+        "brier": 0.4927,
+        "nll": 1.0862,
+        "mean_confidence": 0.7113,
+        "acc_at_50_coverage": 0.8744,
+        "ms_per_case": 9.48
+      },
+      "sst5": {
+        "n": 400,
+        "accuracy": 0.3325,
+        "macro_f1": 0.2869,
+        "ece": 0.2962,
+        "brier": 0.8527,
+        "nll": 1.8203,
+        "mean_confidence": 0.6287,
+        "acc_at_50_coverage": 0.435,
+        "ms_per_case": 8.66
+      },
+      "massive_en": {
+        "n": 400,
+        "accuracy": 0.7725,
+        "macro_f1": 0.771,
+        "ece": 0.182,
+        "brier": 0.3891,
+        "nll": 2.3414,
+        "mean_confidence": 0.9545,
+        "acc_at_50_coverage": 0.95,
+        "ms_per_case": 9.58
+      },
+      "xnli_en": {
+        "n": 400,
+        "accuracy": 0.8575,
+        "macro_f1": 0.8592,
+        "ece": 0.0602,
+        "brier": 0.2186,
+        "nll": 0.4004,
+        "mean_confidence": 0.9177,
+        "acc_at_50_coverage": 0.95,
+        "ms_per_case": 9.1
+      }
+    },
+    "laya-td": {
+      "ag_news": {
+        "n": 400,
+        "accuracy": 0.9525,
+        "macro_f1": 0.9468,
+        "ece": 0.1549,
+        "brier": 0.1136,
+        "nll": 0.28,
+        "mean_confidence": 0.7976,
+        "acc_at_50_coverage": 1.0,
+        "ms_per_case": 9.19
+      },
+      "email_spam": {
+        "n": 400,
+        "accuracy": 0.9675,
+        "macro_f1": 0.9675,
+        "ece": 0.1129,
+        "brier": 0.0877,
+        "nll": 0.1799,
+        "mean_confidence": 0.8546,
+        "acc_at_50_coverage": 1.0,
+        "ms_per_case": 10.38
+      },
+      "phishing": {
+        "n": 400,
+        "accuracy": 0.94,
+        "macro_f1": 0.9351,
+        "ece": 0.0785,
+        "brier": 0.1032,
+        "nll": 0.2021,
+        "mean_confidence": 0.8676,
+        "acc_at_50_coverage": 0.99,
+        "ms_per_case": 10.46
+      },
+      "rag_relevance": {
+        "n": 400,
+        "accuracy": 0.605,
+        "macro_f1": 0.6031,
+        "ece": 0.0492,
+        "brier": 0.4514,
+        "nll": 0.6422,
+        "mean_confidence": 0.6485,
+        "acc_at_50_coverage": 0.715,
+        "ms_per_case": 9.48
+      },
+      "support_triage": {
+        "n": 400,
+        "accuracy": 0.51,
+        "macro_f1": 0.4745,
+        "ece": 0.1242,
+        "brier": 0.6601,
+        "nll": 1.4736,
+        "mean_confidence": 0.4161,
+        "acc_at_50_coverage": 0.595,
+        "ms_per_case": 9.37
+      },
+      "typed_decisions": {
+        "n": 2000,
+        "accuracy": 0.7685,
+        "macro_f1": 0.7523,
+        "ece": 0.2159,
+        "brier": 0.3998,
+        "nll": 0.7072,
+        "mean_confidence": 0.5526,
+        "acc_at_50_coverage": 0.903,
+        "soft_accuracy": 0.4706,
+        "score_mae": 0.2426,
+        "ms_per_case": 20.52,
+        "by_workflow": {
+          "agent_trace_observability": 0.732,
+          "customer_service": 0.764,
+          "invoice_processing": 0.804,
+          "security_incidents": 0.774
+        },
+        "by_type": {
+          "choice": 0.7317,
+          "noul": 0.8583,
+          "score": 0.7288
+        }
+      },
+      "emotion": {
+        "n": 400,
+        "accuracy": 0.5975,
+        "macro_f1": 0.4706,
+        "ece": 0.2036,
+        "brier": 0.6114,
+        "nll": 1.3237,
+        "mean_confidence": 0.7926,
+        "acc_at_50_coverage": 0.705,
+        "ms_per_case": 8.17
+      },
+      "banking77": {
+        "n": 400,
+        "accuracy": 0.4975,
+        "macro_f1": 0.1322,
+        "ece": 0.0987,
+        "brier": 0.6757,
+        "nll": 2.097,
+        "mean_confidence": 0.4505,
+        "acc_at_50_coverage": 0.64,
+        "ms_per_case": 10.21
+      },
+      "jailbreak": {
+        "n": 400,
+        "accuracy": 0.7625,
+        "macro_f1": 0.733,
+        "ece": 0.0834,
+        "brier": 0.3348,
+        "nll": 0.5041,
+        "mean_confidence": 0.8408,
+        "acc_at_50_coverage": 0.885,
+        "ms_per_case": 8.8
+      },
+      "toxicity": {
+        "n": 400,
+        "accuracy": 0.53,
+        "macro_f1": 0.3967,
+        "ece": 0.2437,
+        "brier": 0.5316,
+        "nll": 0.7307,
+        "mean_confidence": 0.7553,
+        "acc_at_50_coverage": 0.72,
+        "ms_per_case": 8.74
+      },
+      "prompt_injection": {
+        "n": 116,
+        "accuracy": 0.6983,
+        "macro_f1": 0.6751,
+        "ece": 0.1868,
+        "brier": 0.4543,
+        "nll": 0.6692,
+        "mean_confidence": 0.8525,
+        "acc_at_50_coverage": 0.8448,
+        "ms_per_case": 8.82
+      },
+      "model_routing": {
+        "n": 399,
+        "accuracy": 0.6591,
+        "macro_f1": 0.3426,
+        "ece": 0.1139,
+        "brier": 0.5033,
+        "nll": 1.0627,
+        "mean_confidence": 0.5908,
+        "acc_at_50_coverage": 0.8342,
+        "ms_per_case": 9.46
+      },
+      "sst5": {
+        "n": 400,
+        "accuracy": 0.48,
+        "macro_f1": 0.4686,
+        "ece": 0.0579,
+        "brier": 0.6414,
+        "nll": 1.174,
+        "mean_confidence": 0.4906,
+        "acc_at_50_coverage": 0.525,
+        "ms_per_case": 9.01
+      },
+      "massive_en": {
+        "n": 400,
+        "accuracy": 0.805,
+        "macro_f1": 0.8073,
+        "ece": 0.0951,
+        "brier": 0.302,
+        "nll": 0.7692,
+        "mean_confidence": 0.896,
+        "acc_at_50_coverage": 0.94,
+        "ms_per_case": 9.85
+      },
+      "xnli_en": {
+        "n": 400,
+        "accuracy": 0.8725,
+        "macro_f1": 0.8738,
+        "ece": 0.051,
+        "brier": 0.1953,
+        "nll": 0.3737,
+        "mean_confidence": 0.8357,
+        "acc_at_50_coverage": 0.97,
+        "ms_per_case": 9.23
+      }
+    },
+    "cbjev": {
+      "ag_news": {
+        "n": 400,
+        "accuracy": 0.945,
+        "macro_f1": 0.9398,
+        "ece": 0.0231,
+        "brier": 0.088,
+        "nll": 0.1612,
+        "mean_confidence": 0.96,
+        "acc_at_50_coverage": 0.995,
+        "ms_per_case": 8.48
+      },
+      "email_spam": {
+        "n": 400,
+        "accuracy": 0.9975,
+        "macro_f1": 0.9975,
+        "ece": 0.0059,
+        "brier": 0.0047,
+        "nll": 0.0095,
+        "mean_confidence": 0.9944,
+        "acc_at_50_coverage": 1.0,
+        "ms_per_case": 7.44
+      },
+      "phishing": {
+        "n": 400,
+        "accuracy": 0.9825,
+        "macro_f1": 0.9815,
+        "ece": 0.0139,
+        "brier": 0.0268,
+        "nll": 0.0426,
+        "mean_confidence": 0.9757,
+        "acc_at_50_coverage": 1.0,
+        "ms_per_case": 5.48
+      },
+      "rag_relevance": {
+        "n": 400,
+        "accuracy": 0.655,
+        "macro_f1": 0.655,
+        "ece": 0.138,
+        "brier": 0.464,
+        "nll": 0.6818,
+        "mean_confidence": 0.7776,
+        "acc_at_50_coverage": 0.75,
+        "ms_per_case": 3.46
+      },
+      "support_triage": {
+        "n": 400,
+        "accuracy": 0.47,
+        "macro_f1": 0.4664,
+        "ece": 0.0639,
+        "brier": 0.6615,
+        "nll": 1.463,
+        "mean_confidence": 0.4556,
+        "acc_at_50_coverage": 0.58,
+        "ms_per_case": 5.98
+      },
+      "typed_decisions": {
+        "n": 2000,
+        "accuracy": 0.783,
+        "macro_f1": 0.7682,
+        "ece": 0.1939,
+        "brier": 0.368,
+        "nll": 0.6578,
+        "mean_confidence": 0.5893,
+        "acc_at_50_coverage": 0.906,
+        "soft_accuracy": 0.49,
+        "score_mae": 0.2472,
+        "ms_per_case": 11.13,
+        "by_workflow": {
+          "agent_trace_observability": 0.74,
+          "customer_service": 0.778,
+          "invoice_processing": 0.848,
+          "security_incidents": 0.766
+        },
+        "by_type": {
+          "choice": 0.7567,
+          "noul": 0.8467,
+          "score": 0.755
+        }
+      },
+      "emotion": {
+        "n": 400,
+        "accuracy": 0.5725,
+        "macro_f1": 0.4785,
+        "ece": 0.1744,
+        "brier": 0.6044,
+        "nll": 1.2892,
+        "mean_confidence": 0.7469,
+        "acc_at_50_coverage": 0.705,
+        "ms_per_case": 2.4
+      },
+      "banking77": {
+        "n": 400,
+        "accuracy": 0.62,
+        "macro_f1": 0.1916,
+        "ece": 0.1779,
+        "brier": 0.5698,
+        "nll": 1.603,
+        "mean_confidence": 0.7881,
+        "acc_at_50_coverage": 0.805,
+        "ms_per_case": 7.84
+      },
+      "jailbreak": {
+        "n": 400,
+        "accuracy": 0.8125,
+        "macro_f1": 0.7773,
+        "ece": 0.1218,
+        "brier": 0.3136,
+        "nll": 0.68,
+        "mean_confidence": 0.9235,
+        "acc_at_50_coverage": 0.865,
+        "ms_per_case": 2.63
+      },
+      "toxicity": {
+        "n": 400,
+        "accuracy": 0.6125,
+        "macro_f1": 0.552,
+        "ece": 0.2883,
+        "brier": 0.6382,
+        "nll": 1.1906,
+        "mean_confidence": 0.9008,
+        "acc_at_50_coverage": 0.715,
+        "ms_per_case": 2.54
+      },
+      "prompt_injection": {
+        "n": 116,
+        "accuracy": 0.6983,
+        "macro_f1": 0.6751,
+        "ece": 0.2546,
+        "brier": 0.52,
+        "nll": 0.9612,
+        "mean_confidence": 0.9319,
+        "acc_at_50_coverage": 0.8621,
+        "ms_per_case": 2.43
+      },
+      "model_routing": {
+        "n": 399,
+        "accuracy": 0.7343,
+        "macro_f1": 0.3731,
+        "ece": 0.1054,
+        "brier": 0.4242,
+        "nll": 0.9112,
+        "mean_confidence": 0.6399,
+        "acc_at_50_coverage": 0.8492,
+        "ms_per_case": 3.6
+      },
+      "sst5": {
+        "n": 400,
+        "accuracy": 0.5225,
+        "macro_f1": 0.512,
+        "ece": 0.0697,
+        "brier": 0.5951,
+        "nll": 1.0592,
+        "mean_confidence": 0.5061,
+        "acc_at_50_coverage": 0.565,
+        "ms_per_case": 2.45
+      },
+      "massive_en": {
+        "n": 400,
+        "accuracy": 0.825,
+        "macro_f1": 0.826,
+        "ece": 0.0605,
+        "brier": 0.2576,
+        "nll": 0.6152,
+        "mean_confidence": 0.87,
+        "acc_at_50_coverage": 0.96,
+        "ms_per_case": 5.19
+      },
+      "xnli_en": {
+        "n": 400,
+        "accuracy": 0.8775,
+        "macro_f1": 0.8784,
+        "ece": 0.0691,
+        "brier": 0.2016,
+        "nll": 0.3856,
+        "mean_confidence": 0.9454,
+        "acc_at_50_coverage": 0.975,
+        "ms_per_case": 3.14
+      }
+    }
+  }
+}

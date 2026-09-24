@@ -32,6 +32,7 @@ def main():
     ap.add_argument("--speed", default="benchmarks/results/speed.json")
     ap.add_argument("--cbjev", default="cbjev")
     ap.add_argument("--laya", default="laya,laya-td")
+    ap.add_argument("--rob", default="benchmarks/results/robustness.json")
     ap.add_argument("--out", default="assets/cbjev_vs_laya_vs_jev.png")
     a = ap.parse_args()
     acc = json.load(open(a.acc))["results"]
@@ -42,8 +43,8 @@ def main():
     best_ece = {s: min(l[s]["ece"] for l in lays if s in l) for s in suites}
 
     plt.rcParams.update({"font.size": 10, "font.family": "DejaVu Sans"})
-    fig = plt.figure(figsize=(16, 10.5), dpi=130)
-    gs = fig.add_gridspec(2, 3, height_ratios=[1.35, 1], hspace=0.42, wspace=0.28)
+    fig = plt.figure(figsize=(18, 11), dpi=130)
+    gs = fig.add_gridspec(2, 4, height_ratios=[1.35, 1], hspace=0.45, wspace=0.32)
 
     # accuracy per suite
     ax = fig.add_subplot(gs[0, :])
@@ -60,14 +61,14 @@ def main():
                 color="#166534" if d >= 0 else "#991b1b", fontweight="bold")
     ax.set_xticks(list(x))
     ax.set_xticklabels([LABELS[s] for s in suites], rotation=28, ha="right")
-    ax.set_ylim(0.3, 1.06)
+    ax.set_ylim(0.4, 1.1)
     ax.set_ylabel("accuracy")
     wins = sum(cb[s]["accuracy"] >= best[s] for s in suites)
     ax.set_title("Accuracy on %d suites: cbjev >= Laya's best checkpoint on %d/%d   (* = dataset held out of training)"
                  % (len(suites), wins, len(suites)), loc="left", fontweight="bold")
     handles = ax.get_legend_handles_labels()[0] + [Patch(facecolor="white", edgecolor=C_JEV, hatch="///",
                                                          label="TypeSafe Jev (published, not measured here)")]
-    ax.legend(handles=handles, loc="lower left", ncol=3, frameon=False)
+    ax.legend(handles=handles, loc="upper right", ncol=3, frameon=False, fontsize=9)
     ax.grid(axis="y", alpha=0.25)
 
     # latency
@@ -91,16 +92,32 @@ def main():
             if col == 0:
                 ax.legend(frameon=False, fontsize=8)
 
-    # calibration
+    # calibration: each checkpoint on its own, no per-suite cherry-picking
     ax = fig.add_subplot(gs[1, 2])
-    mean_cb = sum(cb[s]["ece"] for s in suites) / len(suites)
-    mean_la = sum(best_ece[s] for s in suites) / len(suites)
-    bars = ax.bar(["cbjev", "Laya\n(best per suite)", "Jev\n(published)"], [mean_cb, mean_la, 0.246],
-                  color=[C_CB, C_LA, "white"], edgecolor=["none", "none", C_JEV], hatch=["", "", "///"])
+    names = [("cbjev", "cbjev", C_CB)] + [(x, {"laya": "laya", "laya-td": "laya-typed-\ndecisions"}.get(x, x), C_LA)
+                                         for x in a.laya.split(",") if x in acc]
+    vals = [sum(acc[e][s]["ece"] for s in suites) / len(suites) for e, _, _ in names] + [0.246]
+    bars = ax.bar([n for _, n, _ in names] + ["Jev\n(published)"], vals, color=[c for _, _, c in names] + ["white"],
+                  edgecolor=["none"] * len(names) + [C_JEV], hatch=[""] * len(names) + ["///"])
     for b in bars:
-        ax.text(b.get_x() + b.get_width() / 2, b.get_height() + 0.004, "%.3f" % b.get_height(), ha="center")
-    ax.set_title("Calibration: mean ECE (lower is better)", loc="left", fontweight="bold")
+        ax.text(b.get_x() + b.get_width() / 2, b.get_height() + 0.004, "%.3f" % b.get_height(), ha="center", fontsize=9)
+    ax.set_title("Mean ECE (lower is better)", loc="left", fontweight="bold")
     ax.grid(axis="y", alpha=0.25)
+
+    # option-order robustness
+    if os.path.exists(a.rob):
+        rb = json.load(open(a.rob))["rows"]["mean"]
+        ax = fig.add_subplot(gs[1, 3])
+        keys = [k for k in ("cbjev", "laya", "laya-td") if k in rb]
+        lab = {"cbjev": "cbjev", "laya": "laya", "laya-td": "laya-typed-\ndecisions"}
+        bars = ax.bar([lab[k] for k in keys] + ["Jev\n(published)"], [rb[k] for k in keys] + [0.13],
+                      color=[C_CB if k == "cbjev" else C_LA for k in keys] + ["white"],
+                      edgecolor=["none"] * len(keys) + [C_JEV], hatch=[""] * len(keys) + ["///"])
+        for b in bars:
+            ax.text(b.get_x() + b.get_width() / 2, b.get_height() + 0.002, "%.3f" % b.get_height(), ha="center",
+                    fontsize=9)
+        ax.set_title("Answer flips when options\nare reordered (lower is better)", loc="left", fontweight="bold")
+        ax.grid(axis="y", alpha=0.25)
 
     fig.suptitle("cbjev vs Laya vs TypeSafe Jev", fontsize=17, fontweight="bold", x=0.01, ha="left")
     fig.text(0.01, 0.945, "cbjev and Laya measured on the same GPU and the same cases; Jev figures are third-party "

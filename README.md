@@ -8,7 +8,30 @@ faster, more accurate successor to [Laya](https://github.com/NandhaKishorM/laya)
   <img src="assets/cbjev_vs_laya_vs_jev.png" alt="cbjev vs Laya vs TypeSafe Jev: accuracy on 15 suites, latency, calibration" width="100%" />
 </p>
 
-<!-- RESULTS -->
+## Results at a glance
+
+Measured on one RTX 4090, cbjev and Laya side by side on byte-identical cases ([BENCHMARKS.md](BENCHMARKS.md)).
+Jev numbers are third-party published figures; there was no TypeSafe API access, so they are indicative only.
+
+| | cbjev | Laya (best of its checkpoints) | TypeSafe Jev (published) |
+|---|---|---|---|
+| **mean accuracy, 15 English suites** | **0.741** | 0.710 (laya-typed-decisions) | — |
+| suites where cbjev >= Laya's better checkpoint | **11 / 15** | | |
+| typed-decisions, 2,000 decisions | **0.783** | 0.768 | 0.727 |
+| AG News | 0.945 | **0.953** | 0.910 |
+| DAIR emotion (held out) | 0.573 | **0.598** | 0.480 |
+| Banking77, all 77 labels in one question (held out) | 0.620 | 0.497 | **0.870** (72 labels) |
+| mean ECE (lower is better) | **0.117** | 0.125 | 0.246 |
+| answer flips when options are reordered | **0.2 %** | 7.8 % | 13 % |
+| MASSIVE intent, 51 languages, macro accuracy | **0.436** | 0.401 | — |
+| MASSIVE, languages where cbjev >= Laya | **45 / 51** | | |
+| 1 question, short ticket | **3.0 ms** | 5.4 ms (TileLang fast path) | 236–276 ms (hosted API) |
+| 10 questions, short ticket | **7.5 ms** | 18.2 ms | |
+| 10 questions, ~500-token document | **11.4 ms** | 75.8 ms | |
+| 30 questions, ~500-token document | **31.4 ms** | 172.4 ms | |
+
+cbjev is faster than both Laya paths in every one of the 10 latency cases measured, by 1.5x (one
+question on a long document) to 6.9x (ten questions on a document).
 
 ---
 
@@ -69,11 +92,11 @@ res = agent.predict(
                                     "sales": "pricing, contracts", "other": "everything else"}},
         "urgency": {"type": "score", "instructions": "How urgent is it?",
                     "criteria": ["can wait", "this week", "today", "blocking right now"]},
-        "churn": {"type": "noul", "instructions": "Does the customer threaten to leave?"},
+        "churn": {"type": "noul", "instructions": "Does the customer threaten to cancel their subscription?"},
     },
 )
 res["answers"]["department"]["choice"]      # 'billing'
-res["answers"]["churn"]["noul"]             # P(true)
+res["answers"]["churn"]["noul"]             # P(true), ~0.78
 ```
 
 Many states at once: `agent.predict_batch(states, questions)`.
@@ -129,7 +152,25 @@ python training/calibrate.py --ckpt ~/.cache/cbjev/cbjev --data .work/data
 
 ## Honest limits
 
-<!-- LIMITS -->
+* **Not better everywhere.** Against the better of Laya's two English checkpoints, cbjev trails on
+  4 of 15 suites: AG News (-0.8 points, 3 cases of 400), DAIR emotion (-2.5), prompt injection (-3.4,
+  116 cases, half of them German) and support triage (-4.0). Five training rounds and several weight
+  soups moved these by a point or two at most, so treat them as real.
+* **Many labels still hurt.** Banking77 with all 77 intents in one question: 0.620, better than Laya's
+  0.497 but well behind Jev's published 0.870. Prefer <= 30 options per question.
+* **The English checkpoint is English.** German injection prompts are where it misses most; route
+  non-English text to `cbjev-multilingual` (the `Router` does this).
+* **Answers can depend on the other questions in the call.** The state reads every question of the
+  call, so adding or removing a question can move another question's probabilities slightly. On
+  single-question calls cbjev reads exactly the sequence Laya would.
+* **Train-split suites are not zero-shot.** Six suites use datasets whose train split is in the mix
+  (Laya's documentation lists the same datasets in its own). The nine held-out suites are the fair
+  zero-shot test, and cbjev leads on seven of them.
+* **The training mix was iterated with the benchmark suites in view.** Calibration temperatures were
+  fitted only on the dev split, never on benchmark cases, but choices such as the per-source teacher
+  mix were made after looking at benchmark results.
+* **Weights are not in the repository** (about 800 MB each). Build them with `training/` (about 1 hour
+  on an RTX 4090 per checkpoint) or copy a trained `~/.cache/cbjev/` directory.
 
 ## License
 
