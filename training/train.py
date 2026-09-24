@@ -56,8 +56,9 @@ def permute_choice(spec, dists, rng):
 class Rows:
     """Cases -> packed rows with per-question targets, rebuilt each epoch (fresh option order)."""
 
-    def __init__(self, cases, tokens, max_state, max_question, teacher_mix, seed, shared=False):
+    def __init__(self, cases, tokens, max_state, max_question, teacher_mix, seed, shared=False, mix_by_src=None):
         self.cases, self.tk, self.shared = cases, tokens, shared
+        self.mix_by_src = mix_by_src or {}
         self.max_state, self.max_question, self.mix = max_state, max_question, teacher_mix
         self.seed = seed
         texts = [as_text(c["state"]) for c in cases]
@@ -77,7 +78,8 @@ class Rows:
                 spec, (gold, teach) = permute_choice(spec, [gold, teach], rng)
                 q = parse_question(qid, spec)
                 if gold is not None:
-                    t = [(1 - self.mix) * g + self.mix * h for g, h in zip(gold, teach)] if teach else gold
+                    mx = self.mix_by_src.get(c["src"], self.mix)
+                    t = [(1 - mx) * g + mx * h for g, h in zip(gold, teach)] if teach else gold
                     w = SRC_WEIGHT.get(c["src"], 1.0)
                 else:
                     t, w = teach, 0.5
@@ -202,6 +204,8 @@ def main():
     ap.add_argument("--budget", type=int, default=12288, help="padded tokens per micro-batch")
     ap.add_argument("--accum", type=int, default=2)
     ap.add_argument("--teacher-mix", type=float, default=0.2)
+    ap.add_argument("--teacher-mix-src", default="",
+                    help="per-source teacher share, e.g. 'support_tickets=1.0,ag_news=0.6'")
     ap.add_argument("--max-state", type=int, default=1024)
     ap.add_argument("--max-question", type=int, default=768)
     ap.add_argument("--checkpointing", type=int, default=1)
@@ -237,7 +241,8 @@ def main():
     dev_cases = read_jsonl(os.path.join(a.data, "dev.jsonl"))
     shared = a.layout == "shared"
     net.shared = shared
-    tr = Rows(train_cases, tokens, a.max_state, a.max_question, a.teacher_mix, a.seed, shared)
+    mix_src = {k: float(v) for k, v in (x.split("=") for x in a.teacher_mix_src.split(",") if x)}
+    tr = Rows(train_cases, tokens, a.max_state, a.max_question, a.teacher_mix, a.seed, shared, mix_src)
     dv = Rows(dev_cases, tokens, a.max_state, a.max_question, 0.0, a.seed + 99, shared)
     dev_rows = dv.build(0)
     dev_td = [r for r in dev_rows if r[3] == "typed_decisions"]
