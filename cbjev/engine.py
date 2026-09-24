@@ -90,6 +90,14 @@ class Engine:
         return ids, pos, seg, qt, valid.bool(), markers
 
     def _capture(self, key, tensors):
+        if len(self._graphs) >= self.max_graphs:
+            # All graphs share one memory pool, and a pool is only safe while every graph captured
+            # into it is alive: evicting a single graph lets the next capture reuse memory the
+            # survivors still read (an illegal-address fault a few hundred calls later). So when
+            # the cache is full, drop every graph and start a fresh pool.
+            torch.cuda.synchronize(self.device)
+            self._graphs.clear()
+            self._pool = None
         static = [t.clone() for t in tensors]
         s = torch.cuda.Stream(self.device)
         s.wait_stream(torch.cuda.current_stream(self.device))
@@ -102,8 +110,6 @@ class Engine:
             self._pool = torch.cuda.graph_pool_handle()
         with torch.cuda.graph(g, pool=self._pool):
             out = self._eager(static)
-        if len(self._graphs) >= self.max_graphs:
-            self._graphs.pop(next(iter(self._graphs)))
         self._graphs[key] = (g, static, out)
         return self._graphs[key]
 

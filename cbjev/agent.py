@@ -141,6 +141,9 @@ class Agent:
         # average the two answers. Costs one more short segment per question, not another pass.
         votes = cfg.get("order_votes", 1) if order_votes is None else order_votes
         self.order_votes = int(votes) if self.layout == "packed" else 1
+        # content-free prior correction: subtract alpha x the answer the model gives with no state
+        self.prior_alpha = float(cfg.get("prior_alpha", 0.0))
+        self._priors: Dict[Any, np.ndarray] = {}
 
         self.temperature = [self._clamp(t) for t in cfg.get("temperature", [1.0, 1.0, 1.0])]
         self.temperature_by_options = {k: self._clamp(v) for k, v in cfg.get("temperature_by_options", {}).items()}
@@ -218,6 +221,15 @@ class Agent:
 
     # ------------------------------------------------------------------ answers
 
+    def _prior(self, q: Question) -> np.ndarray:
+        """Mean log-probabilities for `q` over a few content-free states, cached per question."""
+        hit = self._priors.get(q.cache_key)
+        if hit is None:
+            per = self.logits(["", "N/A", {}], [q])
+            hit = np.mean([z - _lse(z) for z in (p[0].astype(np.float64) for p in per)], 0)
+            self._priors[q.cache_key] = hit
+        return hit
+
     def _temp(self, q: Question, k: int) -> float:
         return self.temperature_by_options.get(_bucket_name(q.kind, k), self.temperature[q.qtype])
 
@@ -243,9 +255,18 @@ class Agent:
         qs, twin = list(asked), {}
         if self.order_votes > 1:
             for i, q in enumerate(asked):
-                if q.kind != "noul" and len(q.options) > 1:
-                    twin[i] = len(qs)
-                    qs.append(replace(q, qid=q.qid + "\x00rev", keys=q.keys[::-1], options=q.options[::-1]))
+                n = len(q.options)
+                if q.kind == "noul" or n < 2:
+                    continue
+                twin[i] = []
+                for k in range(1, self.order_votes):
+                    # the first extra vote reverses the options; later ones shift them cyclically
+                    perm = list(range(n))[::-1] if k == 1 else [(j + (k * n) // self.order_votes) % n for j in range(n)]
+                    if perm == list(range(n)):
+                        continue
+                    twin[i].append((len(qs), perm))
+                    qs.append(replace(q, qid="%s\x00v%d" % (q.qid, k), keys=tuple(q.keys[j] for j in perm),
+                                      options=tuple(q.options[j] for j in perm)))
         rows, where = self._rows(states, qs)
         logits = [None] * len(rows)
         tokens = [0] * len(rows)
@@ -276,10 +297,16 @@ class Agent:
                 used.add(ri)
             for qi, q in enumerate(asked):
                 z = raw[qi]
-                if qi in twin:
-                    # average log-probabilities of the two orders (the twin's are reversed back)
-                    a, b = z - _lse(z), raw[twin[qi]][::-1]
-                    z = (a + b - _lse(b)) / 2
+                if twin.get(qi):
+                    # average log-probabilities over every option order, mapped back to the asked order
+                    acc = z - _lse(z)
+                    for j, perm in twin[qi]:
+                        y = np.empty_like(acc)
+                        y[perm] = raw[j] - _lse(raw[j])
+                        acc = acc + y
+                    z = acc / (1 + len(twin[qi]))
+                if self.prior_alpha:
+                    z = (z - _lse(z)) - self.prior_alpha * self._prior(q)
                 answers[q.qid] = self._answer(q, z)
             results.append({"model": self.name, "answers": answers,
                             "usage": {"input_tokens": sum(tokens[r] for r in used), "output_tokens": 0}})
