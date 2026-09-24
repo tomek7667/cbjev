@@ -204,10 +204,17 @@ class DecisionNet(nn.Module):
       markers       [B, M] long positions of option markers (row-local), -1 for none
     """
 
-    def __init__(self, spec: EncoderSpec, head_layers: int = 2, dropout: float = 0.1):
+    def __init__(self, spec: EncoderSpec, head_layers: int = 2, dropout: float = 0.1,
+                 late_interaction: bool = False):
         super().__init__()
         d = spec.dim
         self.encoder = Encoder(spec)
+        # optional late-interaction scorer: every token of an option votes with its best match in
+        # the state; a per-type gate (zero at init) mixes it into the marker score
+        self.li = nn.Linear(d, 128, bias=False) if late_interaction else None
+        self.li_gate = nn.Embedding(3, 1) if late_interaction else None
+        if late_interaction:
+            nn.init.zeros_(self.li_gate.weight)
         self.head = _HeadStack(d, max(1, d // 64), 4 * d, head_layers) if head_layers else None
         self.type_emb = nn.Embedding(3, d)
         self.scorer = nn.Sequential(nn.LayerNorm(d), nn.Linear(d, d), nn.GELU(), nn.Linear(d, 1))
@@ -254,7 +261,28 @@ class DecisionNet(nn.Module):
         sc = self.scorer
         m = _norm(sc[0], torch.gather(h, 1, idx))
         z = _lin(sc[3], F.gelu(_lin(sc[1], m))).squeeze(-1).float()
+        if self.li is not None and packed:
+            z = z + self._late_interaction(h, seg, qtype, valid, markers)
         return z.masked_fill(markers < 0, -1e4)
+
+    def _late_interaction(self, h, seg, qtype, valid, markers):
+        B, L, _ = h.shape
+        e = F.normalize(_lin(self.li, h).float(), dim=-1)
+        state_key = ((seg == 0) & valid)[:, None, :]
+        tok = (e @ e.transpose(1, 2)).masked_fill(~state_key, -1.0).amax(-1)       # [B, L]
+        # which option each token belongs to: the last marker at or before it, same segment
+        mk = markers.masked_fill(markers < 0, L + 1)
+        ar = torch.arange(L, device=h.device)[None].expand(B, -1).contiguous()
+        j = torch.searchsorted(mk, ar, right=True) - 1
+        jc = j.clamp(min=0)
+        mpos = torch.gather(mk, 1, jc).clamp(max=L - 1)
+        own = (j >= 0) & (seg > 0) & valid & (seg == torch.gather(seg, 1, mpos))
+        w = own.float()
+        num = torch.zeros(B, markers.size(1), device=h.device).scatter_add(1, jc, tok * w)
+        den = torch.zeros(B, markers.size(1), device=h.device).scatter_add(1, jc, w)
+        z_li = num / den.clamp(min=1.0)
+        gate = self.li_gate.weight.float()[torch.gather(qtype, 1, markers.clamp(min=0)).clamp(0, 2)].squeeze(-1)
+        return gate * z_li
 
     def cast_linear(self, dtype: torch.dtype) -> "DecisionNet":
         """Matmul weights and embeddings to `dtype`; LayerNorms and the residual stay fp32."""
@@ -272,7 +300,7 @@ def load_weights(net: DecisionNet, sd: Dict[str, torch.Tensor]) -> None:
     """Load a Laya- or cbjev-format state dict; the act head Laya ships is not used here."""
     own = net.state_dict()
     keep = {k: v for k, v in sd.items() if k in own}
-    missing = [k for k in own if k not in keep and not k.startswith("encoder.rope_")]
+    missing = [k for k in own if k not in keep and not k.startswith(("encoder.rope_", "li.", "li_gate."))]
     if missing:
         raise ValueError("checkpoint lacks %d tensors, e.g. %s" % (len(missing), missing[:3]))
     for k, v in keep.items():

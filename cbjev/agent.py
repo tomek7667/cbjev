@@ -152,7 +152,8 @@ class Agent:
         self.dtype = torch.float32
         if self.device.type == "cuda":
             self.dtype = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
-        net = DecisionNet(spec, head_layers=int(cfg.get("head_layers", 2)))
+        net = DecisionNet(spec, head_layers=int(cfg.get("head_layers", 2)),
+                          late_interaction=bool(cfg.get("late_interaction", False)))
         load_weights(net, load_file(os.path.join(path, "model.safetensors")))
         net.shared = self.shared
         net.eval()

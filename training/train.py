@@ -213,6 +213,8 @@ def main():
     ap.add_argument("--eval-every", type=int, default=500)
     ap.add_argument("--name", default="cbjev")
     ap.add_argument("--layout", default="shared", choices=["shared", "packed"])
+    ap.add_argument("--late-interaction", action="store_true")
+    ap.add_argument("--li-lr", type=float, default=1e-3)
     ap.add_argument("--vram-frac", type=float, default=0.5, help="cap on this process's share of GPU memory")
     ap.add_argument("--repeat", default="typed_decisions=8",
                     help="oversample sources, e.g. 'typed_decisions=8,go_emotions=2'")
@@ -229,7 +231,8 @@ def main():
     with open(os.path.join(init_path, "encoder", "config.json")) as f:
         spec = EncoderSpec.from_hf(json.load(f))
     tokens = _tokens_for(os.path.join(init_path, "tokenizer"))
-    net = DecisionNet(spec, head_layers=int(base_cfg.get("head_layers", 2)))
+    li = bool(a.late_interaction or base_cfg.get("late_interaction"))
+    net = DecisionNet(spec, head_layers=int(base_cfg.get("head_layers", 2)), late_interaction=li)
     from safetensors.torch import load_file
     load_weights(net, load_file(os.path.join(init_path, "model.safetensors")))
     net.float().to(device).train()
@@ -250,7 +253,8 @@ def main():
           flush=True)
 
     enc_params = [p for n, p in net.named_parameters() if n.startswith("encoder.")]
-    other = [p for n, p in net.named_parameters() if not n.startswith("encoder.")]
+    li_params = [p for n, p in net.named_parameters() if n.startswith(("li.", "li_gate."))]
+    other = [p for n, p in net.named_parameters() if not n.startswith(("encoder.", "li.", "li_gate."))]
     decay = lambda ps: [p for p in ps if p.ndim >= 2]  # noqa: E731
     nodecay = lambda ps: [p for p in ps if p.ndim < 2]  # noqa: E731
     opt = torch.optim.AdamW([
@@ -258,7 +262,8 @@ def main():
         {"params": nodecay(enc_params), "lr": a.lr, "weight_decay": 0.0},
         {"params": decay(other), "lr": a.head_lr, "weight_decay": 0.01},
         {"params": nodecay(other), "lr": a.head_lr, "weight_decay": 0.0},
-    ], betas=(0.9, 0.98), eps=1e-6, fused=True)
+    ] + ([{"params": li_params, "lr": a.li_lr, "weight_decay": 0.0}] if li_params else []),
+        betas=(0.9, 0.98), eps=1e-6, fused=True)
     base_lrs = [g["lr"] for g in opt.param_groups]
 
     rng = random.Random(a.seed)
@@ -272,7 +277,7 @@ def main():
     for k in ("temperature", "temperature_by_options", "training", "fine_tuned", "gradient_checkpointing",
               "max_tokens_per_batch", "act_costs", "cost_wrong_act", "max_prefixes"):
         cfg.pop(k, None)
-    cfg.update({"layout": a.layout, "model_name": a.name, "max_state_tokens": a.max_state,
+    cfg.update({"late_interaction": li, "layout": a.layout, "model_name": a.name, "max_state_tokens": a.max_state,
                 "max_question_tokens": a.max_question, "temperature": [1.0, 1.0, 1.0],
                 "trained_from": a.init + ("/" + a.init_sub if a.init_sub else "")})
 

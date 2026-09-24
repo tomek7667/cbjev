@@ -200,6 +200,21 @@ If cbjev saves you time or GPU money, you can buy me a coffee:
   <a href="https://ko-fi.com/t6___" target="_blank"><img src="https://img.shields.io/badge/Buy%20me%20a%20coffee-ko--fi-FF5E5B?logo=ko-fi&logoColor=white&style=for-the-badge" alt="Buy me a coffee on Ko-fi" /></a>
 </p>
 
+### Ideas that were measured and did not beat the release
+
+Each was scored on the same 15 suites against the released checkpoint (mean accuracy 0.741, 11/15):
+
+| idea | result |
+|---|---|
+| content-free prior correction (`prior_alpha`) | balanced yes/no suites up (injection +6, toxicity +11), jailbreak −8.5, support −4.7: only shifts thresholds |
+| 3–4 option-order votes (`order_votes=3/4`) | +0.1–0.2 pts mean, within noise, more latency |
+| layer-wise learned merge with Laya (`training/soup_layerwise.py`) | 0.739 mean, 10/15 |
+| late-interaction option scoring (`--late-interaction`) | 0.738 mean, 10/15; support triage −1.2 |
+| weight soups of 2–5 runs, WiSE-FT with Laya | at most +0.1 pts mean, gaps unchanged |
+| extra prompt-injection training data | −10 pts on the injection suite |
+
+The code for the first four stays in the repository, off by default.
+
 ## License
 
 GPL-3.0-or-later (see `LICENSE`). cbjev's checkpoints are fine-tuned from the Apache-2.0 Laya
