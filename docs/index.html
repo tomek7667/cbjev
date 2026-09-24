@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cbjev — typed decisions in one pass</title>
+<meta name="description" content="cbjev answers typed questions (choice, score, noul) about any text or JSON state from one encoder pass. A faster, better-calibrated successor to Laya, compatible with TypeSafe Jev's wire format.">
+<meta property="og:title" content="cbjev — typed decisions in one pass">
+<meta property="og:description" content="Every question of a call shares one encoding of the state. 3 ms for one question, 11 ms for ten questions over a 500-token document.">
+<meta property="og:image" content="https://tomek7667.github.io/cbjev/assets/cbjev_vs_laya_vs_jev.png">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>
+:root{
+  --bg:#ffffff; --bg2:#f6f7fb; --fg:#0f172a; --muted:#475569; --line:#e2e8f0;
+  --blue:#2563eb; --violet:#7c3aed; --amber:#d97706; --green:#15803d; --red:#b91c1c;
+  --code:#0f172a; --codefg:#e2e8f0; --card:#ffffff;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0b1020; --bg2:#111831; --fg:#e8ecf3; --muted:#9aa7bd; --line:#23304d;
+    --blue:#6b9bff; --violet:#a78bfa; --amber:#fbbf24; --green:#4ade80; --red:#f87171;
+    --code:#060a16; --codefg:#dbe4f5; --card:#111831;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0b1020; --bg2:#111831; --fg:#e8ecf3; --muted:#9aa7bd; --line:#23304d;
+  --blue:#6b9bff; --violet:#a78bfa; --amber:#fbbf24; --green:#4ade80; --red:#f87171;
+  --code:#060a16; --codefg:#dbe4f5; --card:#111831;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 Inter,"Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif}
+a{color:var(--blue);text-decoration:none} a:hover{text-decoration:underline}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+header.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;gap:14px;height:58px}
+header.top img{height:30px}
+header.top nav{margin-left:auto;display:flex;gap:18px;font-size:14px}
+header.top nav a{color:var(--muted)}
+.theme{background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:4px 8px;cursor:pointer;font-size:13px}
+.hero{padding:64px 0 36px;text-align:center}
+.hero img.lock{width:min(360px,80%)}
+.hero h1{font-size:clamp(26px,4.2vw,40px);line-height:1.2;margin:22px auto 12px;max-width:820px;letter-spacing:-.5px}
+.hero p.lead{color:var(--muted);font-size:18px;max-width:760px;margin:0 auto}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.btn{display:inline-block;padding:10px 18px;border-radius:10px;font-weight:600;font-size:15px}
+.btn.primary{background:linear-gradient(135deg,var(--blue),var(--violet));color:#fff}
+.btn.ghost{border:1px solid var(--line);color:var(--fg)}
+.btn:hover{text-decoration:none;filter:brightness(1.07)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:34px 0 10px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.stat b{display:block;font-size:26px;letter-spacing:-.5px}
+.stat span{color:var(--muted);font-size:14px}
+section{padding:44px 0;border-top:1px solid var(--line)}
+section h2{font-size:26px;margin:0 0 8px;letter-spacing:-.3px}
+section p.sub{color:var(--muted);margin:0 0 22px}
+.chart{width:100%;border-radius:12px;border:1px solid var(--line);background:#fff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media (max-width:760px){.grid2{grid-template-columns:1fr} header.top nav{display:none} .theme{margin-left:auto}}
+pre{background:var(--code);color:var(--codefg);border-radius:12px;padding:16px 18px;overflow-x:auto;font:13.5px/1.55 "JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;margin:0}
+code{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.92em}
+p code, li code, td code{background:var(--bg2);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:560px}
+th,td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{background:var(--bg2);font-weight:600}
+tr:last-child td{border-bottom:none}
+td.win{color:var(--green);font-weight:700} td.lose{color:var(--red)}
+.pill{display:inline-block;font-size:12px;padding:1px 8px;border-radius:99px;background:var(--bg2);border:1px solid var(--line);color:var(--muted)}
+.diagram{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+.diagram svg{width:100%;height:auto}
+ul.limits li{margin:6px 0}
+footer{border-top:1px solid var(--line);padding:30px 0 50px;color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a href="#"><img src="assets/logo-mark.svg" alt="cbjev"></a>
+  <strong>cbjev</strong>
+  <nav><a href="#how">How it works</a><a href="#results">Results</a><a href="#start">Quickstart</a><a href="#limits">Limits</a><a href="https://github.com/tomek7667/cbjev">GitHub</a></nav>
+  <button class="theme" id="theme" aria-label="Toggle colour theme">◐</button>
+</div></header>
+
+<main class="wrap">
+  <div class="hero">
+    <img class="lock" id="lockup" src="assets/logo-lockup.svg" alt="cbjev">
+    <h1>Typed decisions about any text, every question answered from one encoding</h1>
+    <p class="lead"><code>choice</code>, <code>score</code> and <code>noul</code> questions over a ticket, an e-mail or a JSON document —
+      no generation, nothing to parse. Self-hosted, speaks TypeSafe Jev's wire format, and a faster, better-calibrated successor to Laya.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/tomek7667/cbjev">View on GitHub</a>
+      <a class="btn ghost" href="https://github.com/tomek7667/cbjev/blob/master/BENCHMARKS.md">All benchmarks</a>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>3.0 ms</b><span>one question, short ticket (RTX 4090)</span></div>
+      <div class="stat"><b>6.7×</b><span>faster than Laya: 10 questions, 500-token document</span></div>
+      <div class="stat"><b>0.741</b><span>mean accuracy, 15 English suites (Laya's best: 0.710)</span></div>
+      <div class="stat"><b>0.2 %</b><span>answers that flip when options are reordered (Laya 7.8 %)</span></div>
+    </div>
+  </div>
+
+  <section id="how">
+    <h2>How it works</h2>
+    <p class="sub">Laya reads the state once per question. cbjev reads it once per call.</p>
+    <div class="grid2">
+      <div class="diagram">
+        <svg viewBox="0 0 460 190" role="img" aria-label="Laya layout: one sequence per question">
+          <text x="0" y="16" font-size="14" font-weight="700" fill="currentColor">Laya: N sequences</text>
+          <g font-size="12" fill="#fff">
+            <rect x="0" y="30" width="110" height="34" rx="6" fill="#d97706"/><text x="12" y="52">question 1</text>
+            <rect x="116" y="30" width="330" height="34" rx="6" fill="#64748b"/><text x="236" y="52">state</text>
+            <rect x="0" y="72" width="110" height="34" rx="6" fill="#d97706"/><text x="12" y="94">question 2</text>
+            <rect x="116" y="72" width="330" height="34" rx="6" fill="#64748b"/><text x="236" y="94">state again</text>
+            <rect x="0" y="114" width="110" height="34" rx="6" fill="#d97706"/><text x="12" y="136">question 3</text>
+            <rect x="116" y="114" width="330" height="34" rx="6" fill="#64748b"/><text x="236" y="136">state again</text>
+          </g>
+          <text x="0" y="178" font-size="12" fill="currentColor" opacity=".75">10 questions × 500-token document ≈ 6,000 tokens</text>
+        </svg>
+      </div>
+      <div class="diagram">
+        <svg viewBox="0 0 460 190" role="img" aria-label="cbjev layout: one row, state once">
+          <text x="0" y="16" font-size="14" font-weight="700" fill="currentColor">cbjev: one row</text>
+          <g font-size="12" fill="#fff">
+            <rect x="0" y="30" width="82" height="34" rx="6" fill="#2563eb"/><text x="10" y="52">question 1</text>
+            <rect x="86" y="30" width="82" height="34" rx="6" fill="#2563eb"/><text x="96" y="52">question 2</text>
+            <rect x="172" y="30" width="82" height="34" rx="6" fill="#2563eb"/><text x="182" y="52">question 3</text>
+            <rect x="258" y="30" width="188" height="34" rx="6" fill="#7c3aed"/><text x="330" y="52">state, once</text>
+          </g>
+          <g font-size="12" fill="currentColor">
+            <text x="0" y="94">• questions never see each other</text>
+            <text x="0" y="114">• the state reads every question</text>
+            <text x="0" y="134">• one question ⇒ exactly Laya's input, token for token</text>
+            <text x="0" y="178" opacity=".75">10 questions × 500-token document ≈ 1,000 tokens</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <p style="margin-top:18px">On top of the packed layout: a from-scratch ModernBERT/mmBERT forward with an explicit attention mask,
+      bf16 matmuls over an fp32 residual stream, <code>torch.compile</code>-fused layers replayed as one CUDA graph per shape bucket,
+      state tokenized once per call and question text cached. Checkpoints are fine-tuned from Laya on 35 public datasets,
+      distilled against both English Laya models, and calibrated on a held-back dev split.</p>
+  </section>
+
+  <section id="results">
+    <h2>cbjev vs Laya vs TypeSafe Jev</h2>
+    <p class="sub">cbjev and Laya measured on the same RTX 4090 with byte-identical cases. Jev numbers are third-party published results (no API access here), so they are indicative only.</p>
+    <img class="chart" src="assets/cbjev_vs_laya_vs_jev.png" alt="Accuracy on 15 suites, latency, calibration and option-order robustness for cbjev, Laya and Jev">
+    <div class="tbl" style="margin-top:22px"><table>
+      <tr><th></th><th>cbjev</th><th>Laya (best checkpoint)</th><th>Jev (published)</th></tr>
+      <tr><td>typed-decisions, 2,000 decisions</td><td class="win">0.783</td><td>0.768</td><td>0.727</td></tr>
+      <tr><td>mean accuracy, 15 English suites</td><td class="win">0.741</td><td>0.710</td><td>—</td></tr>
+      <tr><td>Banking77, 77 labels in one question</td><td>0.620</td><td>0.497</td><td class="win">0.870</td></tr>
+      <tr><td>mean ECE (lower is better)</td><td class="win">0.117</td><td>0.125</td><td>0.246</td></tr>
+      <tr><td>answer flips on reordered options</td><td class="win">0.2 %</td><td>7.8 %</td><td>13 %</td></tr>
+      <tr><td>MASSIVE, 51 languages, macro accuracy</td><td class="win">0.436</td><td>0.401</td><td>—</td></tr>
+      <tr><td>1 question, short ticket</td><td class="win">3.0 ms</td><td>5.4 ms</td><td>236–276 ms (hosted)</td></tr>
+      <tr><td>10 questions, 500-token document</td><td class="win">11.4 ms</td><td>75.8 ms</td><td>—</td></tr>
+      <tr><td>30 questions, 500-token document</td><td class="win">31.4 ms</td><td>172.4 ms</td><td>—</td></tr>
+    </table></div>
+    <p class="sub" style="margin-top:14px">cbjev is ahead of Laya's better checkpoint on 11 of 15 English suites, 45 of 51 languages, and all 10 latency cases.
+      Full tables: <a href="https://github.com/tomek7667/cbjev/blob/master/BENCHMARKS.md">BENCHMARKS.md</a>.</p>
+  </section>
+
+  <section id="start">
+    <h2>Quickstart</h2>
+    <p class="sub">Python 3.10+, PyTorch 2.4+. GPU if available, CPU otherwise.</p>
+    <div class="grid2">
+<pre>git clone https://github.com/tomek7667/cbjev
+cd cbjev
+python -m venv .venv
+.venv/bin/pip install -e ".[serve]"
+
+# build the weights (about 1 h on an RTX 4090)
+python training/build.py --out .work/data
+python training/train.py --data .work/data \
+    --out ~/.cache/cbjev/cbjev --repeat typed_decisions=8
+python training/calibrate.py \
+    --ckpt ~/.cache/cbjev/cbjev --data .work/data
+
+cbjev-serve        # POST /v1/systemone, Jev wire format</pre>
+<pre>import cbjev
+
+agent = cbjev.load()
+res = agent.predict(
+  {"subject": "Duplicate charge on invoice #4411",
+   "body": "Billed twice for March. Refund it "
+           "today or we cancel."},
+  {"department": {"type": "choice",
+     "instructions": "Which team should handle this?",
+     "criteria": {"billing": "invoices, refunds",
+                  "technical": "bugs, outages",
+                  "other": "everything else"}},
+   "churn": {"type": "noul", "instructions":
+     "Does the customer threaten to cancel "
+     "their subscription?"}})
+
+res["answers"]["department"]["choice"]  # 'billing'
+res["answers"]["churn"]["noul"]         # P(true)</pre>
+    </div>
+  </section>
+
+  <section id="limits">
+    <h2>Honest limits</h2>
+    <ul class="limits">
+      <li><b>Not better everywhere.</b> cbjev trails Laya's better checkpoint on 4 of 15 English suites: AG News (−0.8 pts),
+        DAIR emotion (−2.5), prompt injection (−3.4, many German prompts) and support triage (−4.0).</li>
+      <li><b>Many labels still hurt.</b> Banking77 with all 77 intents in one question: 0.620, behind Jev's published 0.870.
+        Keep choice questions under ~30 options.</li>
+      <li><b>The English checkpoint is English.</b> Route other languages to <code>cbjev-multilingual</code>; the <code>Router</code> does it for you.</li>
+      <li><b>Questions in one call can nudge each other</b>, because the state reads all of them. A single-question call reads exactly what Laya would.</li>
+      <li><b>Weights are not in the repository</b> (≈800 MB each); <code>training/</code> rebuilds them.</li>
+    </ul>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  cbjev is GPL-3.0-or-later. Its checkpoints are fine-tuned from the Apache-2.0
+  <a href="https://github.com/NandhaKishorM/laya">Laya</a> checkpoints by Convai Innovations
+  (<a href="https://github.com/tomek7667/cbjev/blob/master/NOTICE">NOTICE</a>).
+  Jev is a product of TypeSafe; cbjev is not affiliated with TypeSafe or Convai Innovations.
+</div></footer>
+
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('theme'), lock=document.getElementById('lockup');
+  function dark(){var t=root.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches}
+  function sync(){lock.src=dark()?'assets/logo-lockup-dark.svg':'assets/logo-lockup.svg'}
+  try{var saved=localStorage.getItem('cbjev-theme');if(saved)root.setAttribute('data-theme',saved)}catch(e){}
+  sync();
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',sync);
+  btn.addEventListener('click',function(){
+    var next=dark()?'light':'dark';root.setAttribute('data-theme',next);
+    try{localStorage.setItem('cbjev-theme',next)}catch(e){}
+    sync();
+  });
+})();
+</script>
+</body>
+</html>

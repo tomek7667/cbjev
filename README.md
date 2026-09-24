@@ -1,8 +1,24 @@
-# cbjev
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-lockup-dark.png" />
+    <img src="assets/logo-lockup.png" alt="cbjev" width="330" />
+  </picture>
+</p>
 
-**Typed decisions — `choice`, `score`, `noul` — about any text or JSON state, from one encoder pass.**
-No generation, nothing to parse. A drop-in, self-hosted answer to TypeSafe's Jev wire format, and a
-faster, more accurate successor to [Laya](https://github.com/NandhaKishorM/laya).
+<p align="center"><b>Typed decisions — <code>choice</code>, <code>score</code>, <code>noul</code> — about any text or JSON state, from one encoder pass.</b><br/>
+Every question of a call shares one encoding of the state: 3 ms for one question, 11 ms for ten questions over a 500-token document.<br/>
+A self-hosted, Jev-compatible, faster and better-calibrated successor to <a href="https://github.com/NandhaKishorM/laya">Laya</a>.</p>
+
+<div align="center">
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](pyproject.toml)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.4%2B-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org)
+[![Project page](https://img.shields.io/badge/project%20page-tomek7667.github.io%2Fcbjev-7c3aed)](https://tomek7667.github.io/cbjev/)
+[![Benchmarks](https://img.shields.io/badge/benchmarks-BENCHMARKS.md-2563eb)](BENCHMARKS.md)
+[![Built on Laya](https://img.shields.io/badge/fine--tuned%20from-Laya%20%28Apache--2.0%29-f59e0b)](NOTICE)
+
+</div>
 
 <p align="center">
   <img src="assets/cbjev_vs_laya_vs_jev.png" alt="cbjev vs Laya vs TypeSafe Jev: accuracy on 15 suites, latency, calibration" width="100%" />
