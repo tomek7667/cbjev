@@ -15,6 +15,7 @@ A self-hosted, Jev-compatible, faster and better-calibrated successor to <a href
 [![Python](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](pyproject.toml)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.4%2B-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org)
 [![Project page](https://img.shields.io/badge/project%20page-tomek7667.github.io%2Fcbjev-7c3aed)](https://tomek7667.github.io/cbjev/)
+[![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20weights-0010101010--1%2Fcbjev-ffcc4d)](https://huggingface.co/0010101010-1/cbjev)
 [![Benchmarks](https://img.shields.io/badge/benchmarks-BENCHMARKS.md-2563eb)](BENCHMARKS.md)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-ko--fi-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/t6___)
 [![Built on Laya](https://img.shields.io/badge/fine--tuned%20from-Laya%20%28Apache--2.0%29-f59e0b)](NOTICE)
@@ -90,9 +91,11 @@ python -m venv .venv
 .venv/bin/pip install -e ".[serve]"   # + HTTP server
 ```
 
-Weights: point `CBJEV_HOME` (default `~/.cache/cbjev`) at a directory holding `cbjev/` and
-`cbjev-multilingual/`, or pass a path to `cbjev.load(...)`. They are produced by `training/`
-(see [Training](#training)).
+Weights download on first use from Hugging Face:
+[`0010101010-1/cbjev`](https://huggingface.co/0010101010-1/cbjev) (English at the root,
+`multilingual/` for the multilingual checkpoint). To use weights you trained yourself, put them in
+`$CBJEV_HOME/cbjev/` and `$CBJEV_HOME/cbjev-multilingual/` (default `~/.cache/cbjev`) or pass a path to
+`cbjev.load(...)`; see [Training](#training).
 
 ## Quickstart
 
@@ -186,8 +189,8 @@ python training/calibrate.py --ckpt ~/.cache/cbjev/cbjev --data .work/data
 * **The training mix was iterated with the benchmark suites in view.** Calibration temperatures were
   fitted only on the dev split, never on benchmark cases, but choices such as the per-source teacher
   mix were made after looking at benchmark results.
-* **Weights are not in the repository** (about 800 MB each). Build them with `training/` (about 1 hour
-  on an RTX 4090 per checkpoint) or copy a trained `~/.cache/cbjev/` directory.
+* **Weights live on Hugging Face, not in git** (about 800 MB each); `cbjev.load()` fetches them, and
+  `training/` rebuilds them from scratch in about an hour per checkpoint on an RTX 4090.
 
 ## Support the project
 

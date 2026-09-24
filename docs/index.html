@@ -89,6 +89,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 50px;color:var(--muted);f
       no generation, nothing to parse. Self-hosted, speaks TypeSafe Jev's wire format, and a faster, better-calibrated successor to Laya.</p>
     <div class="cta">
       <a class="btn primary" href="https://github.com/tomek7667/cbjev">View on GitHub</a>
+      <a class="btn ghost" href="https://huggingface.co/0010101010-1/cbjev">🤗 Weights</a>
       <a class="btn ghost" href="https://github.com/tomek7667/cbjev/blob/master/BENCHMARKS.md">All benchmarks</a>
       <a class="btn ghost" href="https://ko-fi.com/t6___">☕ Buy me a coffee</a>
     </div>
@@ -171,14 +172,16 @@ cd cbjev
 python -m venv .venv
 .venv/bin/pip install -e ".[serve]"
 
-# build the weights (about 1 h on an RTX 4090)
+# weights download on first use from
+# huggingface.co/0010101010-1/cbjev
+
+cbjev "I was charged twice" --predict
+cbjev-serve        # POST /v1/systemone, Jev wire format
+
+# or train your own (about 1 h on an RTX 4090)
 python training/build.py --out .work/data
 python training/train.py --data .work/data \
-    --out ~/.cache/cbjev/cbjev --repeat typed_decisions=8
-python training/calibrate.py \
-    --ckpt ~/.cache/cbjev/cbjev --data .work/data
-
-cbjev-serve        # POST /v1/systemone, Jev wire format</pre>
+    --out ~/.cache/cbjev/cbjev</pre>
 <pre>import cbjev
 
 agent = cbjev.load()
@@ -209,7 +212,7 @@ res["answers"]["churn"]["noul"]         # P(true)</pre>
         Keep choice questions under ~30 options.</li>
       <li><b>The English checkpoint is English.</b> Route other languages to <code>cbjev-multilingual</code>; the <code>Router</code> does it for you.</li>
       <li><b>Questions in one call can nudge each other</b>, because the state reads all of them. A single-question call reads exactly what Laya would.</li>
-      <li><b>Weights are not in the repository</b> (≈800 MB each); <code>training/</code> rebuilds them.</li>
+      <li><b>Weights are on <a href="https://huggingface.co/0010101010-1/cbjev">Hugging Face</a></b> (≈800 MB each), fetched on first use; <code>training/</code> rebuilds them.</li>
     </ul>
   </section>
 </main>

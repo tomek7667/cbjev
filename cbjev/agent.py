@@ -114,7 +114,8 @@ class Agent:
         from .model import DecisionNet, EncoderSpec, load_weights
         from . import checkpoints
 
-        path = resolve_checkpoint(checkpoints.resolve(checkpoint), subfolder, token)
+        target, sub = checkpoints.locate(checkpoint)
+        path = resolve_checkpoint(target, subfolder or sub, token)
         cfg_file = next((os.path.join(path, n) for n in ("cbjev_config.json", "rl_agent_config.json")
                          if os.path.exists(os.path.join(path, n))), None)
         if cfg_file is None:
