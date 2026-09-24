@@ -212,8 +212,11 @@ Each was scored on the same 15 suites against the released checkpoint (mean accu
 | late-interaction option scoring (`--late-interaction`) | 0.738 mean, 10/15; support triage −1.2 |
 | weight soups of 2–5 runs, WiSE-FT with Laya | at most +0.1 pts mean, gaps unchanged |
 | extra prompt-injection training data | −10 pts on the injection suite |
+| "fits least" counter-question in the same pass (`contrast_lambda`) | net −2 to −7 pts over the choice suites; emotion up, support triage down |
+| weight EMA over one more epoch (`--ema`) | 0.736 mean, 10/15 |
+| control: one more epoch of plain training from the release | 0.737 mean, 10/15; the release sits at its optimum for this data mix |
 
-The code for the first four stays in the repository, off by default.
+The code for these options stays in the repository, off by default.
 
 ## License
 

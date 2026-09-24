@@ -143,6 +143,7 @@ class Agent:
         self.order_votes = int(votes) if self.layout == "packed" else 1
         # content-free prior correction: subtract alpha x the answer the model gives with no state
         self.prior_alpha = float(cfg.get("prior_alpha", 0.0))
+        self.contrast_lambda = float(cfg.get("contrast_lambda", 0.0))
         self._priors: Dict[Any, np.ndarray] = {}
 
         self.temperature = [self._clamp(t) for t in cfg.get("temperature", [1.0, 1.0, 1.0])]
@@ -268,6 +269,15 @@ class Agent:
                     twin[i].append((len(qs), perm))
                     qs.append(replace(q, qid="%s\x00v%d" % (q.qid, k), keys=tuple(q.keys[j] for j in perm),
                                       options=tuple(q.options[j] for j in perm)))
+        contra = {}
+        if self.contrast_lambda:
+            # "argue against yourself": ask each choice question in reverse in the same pass and
+            # penalise options the model is confident fit *least*
+            for i, q in enumerate(asked):
+                if q.kind == "choice" and len(q.options) > 2:
+                    contra[i] = len(qs)
+                    qs.append(replace(q, qid=q.qid + "\x00least", instructions=(
+                        "Which option fits LEAST, i.e. is the worst answer to: %s" % q.instructions)))
         rows, where = self._rows(states, qs)
         logits = [None] * len(rows)
         tokens = [0] * len(rows)
@@ -306,6 +316,9 @@ class Agent:
                         y[perm] = raw[j] - _lse(raw[j])
                         acc = acc + y
                     z = acc / (1 + len(twin[qi]))
+                if qi in contra:
+                    zl = raw[contra[qi]]
+                    z = (z - _lse(z)) - self.contrast_lambda * (zl - _lse(zl))
                 if self.prior_alpha:
                     z = (z - _lse(z)) - self.prior_alpha * self._prior(q)
                 answers[q.qid] = self._answer(q, z)

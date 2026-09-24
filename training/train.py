@@ -177,10 +177,12 @@ def evaluate(net, rows, pad, device, budget):
     return {"acc": hit / max(1, tot), "nll": nll / max(1, tot), "n": tot}
 
 
-def save(net, cfg, init_path, out):
+def save(net, cfg, init_path, out, override=None):
     from safetensors.torch import save_file
     os.makedirs(out, exist_ok=True)
-    sd = {k: v.detach().to(torch.bfloat16).contiguous().cpu() for k, v in net.state_dict().items()
+    src = dict(net.state_dict())
+    src.update(override or {})
+    sd = {k: v.detach().to(torch.bfloat16).contiguous().cpu() for k, v in src.items()
           if not k.startswith("encoder.rope_")}
     save_file(sd, os.path.join(out, "model.safetensors"))
     with open(os.path.join(out, "cbjev_config.json"), "w") as f:
@@ -214,6 +216,7 @@ def main():
     ap.add_argument("--name", default="cbjev")
     ap.add_argument("--layout", default="shared", choices=["shared", "packed"])
     ap.add_argument("--late-interaction", action="store_true")
+    ap.add_argument("--ema", type=float, default=0.0, help="weight EMA decay per optimizer step, e.g. 0.998")
     ap.add_argument("--li-lr", type=float, default=1e-3)
     ap.add_argument("--vram-frac", type=float, default=0.5, help="cap on this process's share of GPU memory")
     ap.add_argument("--repeat", default="typed_decisions=8",
@@ -281,6 +284,8 @@ def main():
                 "max_question_tokens": a.max_question, "temperature": [1.0, 1.0, 1.0],
                 "trained_from": a.init + ("/" + a.init_sub if a.init_sub else "")})
 
+    # exponential moving average of the weights, saved next to the raw ones as <out>_ema
+    ema = {n: p.detach().clone() for n, p in net.named_parameters()} if a.ema > 0 else None
     step, micro, t0, epoch, done = 0, 0, time.time(), 0, False
     run_loss, run_n = 0.0, 0
     best = None
@@ -308,6 +313,10 @@ def main():
                 g["lr"] = lr * f
             opt.step()
             opt.zero_grad(set_to_none=True)
+            if ema is not None:
+                with torch.no_grad():
+                    for n, p in net.named_parameters():
+                        ema[n].lerp_(p.detach(), 1 - a.ema)
             step += 1
             if step % 50 == 0:
                 el = time.time() - t0
@@ -319,11 +328,15 @@ def main():
                 print("  dev acc %.4f nll %.4f | typed-decisions dev acc %.4f nll %.4f" % (
                     ev["acc"], ev["nll"], evt["acc"], evt["nll"]), flush=True)
                 save(net, cfg, init_path, a.out)
+                if ema is not None:
+                    save(net, cfg, init_path, a.out + "_ema", ema)
             if step >= total:
                 done = True
                 break
         epoch += 1
     save(net, cfg, init_path, a.out)
+    if ema is not None:
+        save(net, cfg, init_path, a.out + "_ema", ema)
     print("saved", a.out, flush=True)
 
 

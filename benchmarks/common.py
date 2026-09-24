@@ -30,6 +30,11 @@ def load_agent(name):
     """Engine names: laya, laya-fast, laya-td, laya-ml, cbjev, cbjev-classic, cbjev:<path>;
     a cbjev name may end in @v2 to answer with option-order voting."""
     import cbjev
+    if "@c" in name:
+        base, lam = name.rsplit("@c", 1)
+        ag = load_agent(base)
+        ag.contrast_lambda = float(lam)
+        return ag
     if "@p" in name:
         base, alpha = name.rsplit("@p", 1)
         ag = load_agent(base)
