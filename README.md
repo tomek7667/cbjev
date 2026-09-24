@@ -16,6 +16,7 @@ A self-hosted, Jev-compatible, faster and better-calibrated successor to <a href
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.4%2B-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org)
 [![Project page](https://img.shields.io/badge/project%20page-tomek7667.github.io%2Fcbjev-7c3aed)](https://tomek7667.github.io/cbjev/)
 [![Benchmarks](https://img.shields.io/badge/benchmarks-BENCHMARKS.md-2563eb)](BENCHMARKS.md)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-ko--fi-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/t6___)
 [![Built on Laya](https://img.shields.io/badge/fine--tuned%20from-Laya%20%28Apache--2.0%29-f59e0b)](NOTICE)
 
 </div>
@@ -187,6 +188,14 @@ python training/calibrate.py --ckpt ~/.cache/cbjev/cbjev --data .work/data
   mix were made after looking at benchmark results.
 * **Weights are not in the repository** (about 800 MB each). Build them with `training/` (about 1 hour
   on an RTX 4090 per checkpoint) or copy a trained `~/.cache/cbjev/` directory.
+
+## Support the project
+
+If cbjev saves you time or GPU money, you can buy me a coffee:
+
+<p align="left">
+  <a href="https://ko-fi.com/t6___" target="_blank"><img src="https://img.shields.io/badge/Buy%20me%20a%20coffee-ko--fi-FF5E5B?logo=ko-fi&logoColor=white&style=for-the-badge" alt="Buy me a coffee on Ko-fi" /></a>
+</p>
 
 ## License
 
